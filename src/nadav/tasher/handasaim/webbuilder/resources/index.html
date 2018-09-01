@@ -7,16 +7,38 @@
     <link rel="icon" href="web_res/icon.png">
     <title>H+</title>
     <style>
-  .topBar{
-     vertical-align: top;
-  }
+    .topBar {
+      vertical-align: top;
+      border-radius: 10px;
+    }
+
+    .topBarIcon {
+      height: 15%;
+      width: 15%;
+    }
+
+    html{
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      background-repeat: no-repeat;
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      -o-background-size: cover;
+      background-size: cover;
+      height: inherit;
+    }
 
     </style>
     <script type="text/javascript">
     var schedule = {};
     var topBarColor = "#888888";
-    var topColor = "#dd8833";
-    var backColor = "#123456";
+    var iconColor = "#dd8833";
+    var topColor = "#123456";
+    var bottomColor = "#937421";
 
     function onPageLoad() {
       setupColors();
@@ -25,10 +47,10 @@
     function setupColors() {
       setupTopBarColor();
       setupTopColor();
-      setupBackgroundColor();
+      setupBackground();
     }
 
-    function setupTopBarColor(){
+    function setupTopBarColor() {
       document.getElementById("topBar").style.backgroundColor = topBarColor;
     }
 
@@ -47,8 +69,9 @@
       document.getElementById("topBar").style.visibility = "visible";
     }
 
-    function setupBackgroundColor() {
-      document.body.style.backgroundColor = backColor;
+    function setupBackground() {
+      // document.body.style.backgroundColor = backColor;
+      document.body.style.backgroundImage = 'linear-gradient(to bottom,' + topColor + ', ' + bottomColor + ')';
     }
 
     function setCookie(cname, cvalue) {
@@ -80,7 +103,7 @@
 <body onload="onPageLoad()">
 <center>
     <div id="topBar" class="topBar">
-        <img src="web_res/icon.svg"/>
+        <img src="web_res/icon.svg" class="topBarIcon"/>
     </div>
     <div id="content">
     </div>
