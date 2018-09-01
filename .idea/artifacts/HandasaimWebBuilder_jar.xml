@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="HandasaimWebBuilder:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/HandasaimWebBuilder_jar</output-path>
+    <root id="archive" name="HandasaimWebBuilder.jar">
+      <element id="module-output" name="HandasaimWebBuilder" />
+    </root>
+  </artifact>
+</component>

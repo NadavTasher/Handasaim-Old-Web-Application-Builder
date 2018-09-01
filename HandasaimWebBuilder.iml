@@ -7,6 +7,22 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="commons-codec-1.10" level="project" />
+    <orderEntry type="library" name="commons-collections4-4.1" level="project" />
+    <orderEntry type="library" name="commons-lang3-3.7" level="project" />
+    <orderEntry type="library" name="commons-logging-1.2" level="project" />
+    <orderEntry type="library" name="curvesapi-1.04" level="project" />
+    <orderEntry type="library" name="json" level="project" />
+    <orderEntry type="library" name="jsoup-1.11.3" level="project" />
+    <orderEntry type="library" name="junit-4.12" level="project" />
+    <orderEntry type="library" name="log4j-1.2.17" level="project" />
+    <orderEntry type="library" name="okhttp-3.3.0" level="project" />
+    <orderEntry type="library" name="okio-1.8.0" level="project" />
+    <orderEntry type="library" name="poi-3.17" level="project" />
+    <orderEntry type="library" name="poi-excelant-3.17" level="project" />
+    <orderEntry type="library" name="poi-ooxml-3.17" level="project" />
+    <orderEntry type="library" name="poi-ooxml-schemas-3.17" level="project" />
+    <orderEntry type="library" name="poi-scratchpad-3.17" level="project" />
+    <orderEntry type="library" name="xmlbeans-2.6.0" level="project" />
   </component>
 </module>
-
