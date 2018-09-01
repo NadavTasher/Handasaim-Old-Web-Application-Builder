@@ -1,7 +1,12 @@
 package nadav.tasher.handasaim.webbuilder;
 
 import nadav.tasher.handasaim.webbuilder.appcore.AppCore;
+import nadav.tasher.handasaim.webbuilder.appcore.components.Classroom;
 import nadav.tasher.handasaim.webbuilder.appcore.components.Schedule;
+import nadav.tasher.handasaim.webbuilder.appcore.components.Subject;
+import org.apache.commons.io.Charsets;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -9,6 +14,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
@@ -17,10 +23,24 @@ import java.nio.channels.ReadableByteChannel;
 import java.util.regex.Pattern;
 
 public class Main {
+
+    /*
+        Shortcuts:
+        n = name
+        ns = names
+        sjs = subjects
+        h = hour
+        bm = beginning minute
+        em = ending minute
+        d = description
+        g = grade
+     */
+
     private static final String schedulePage = "http://handasaim.co.il/2018/08/31/%D7%9E%D7%A2%D7%A8%D7%9B%D7%AA-%D7%95%D7%A9%D7%99%D7%A0%D7%95%D7%99%D7%99%D7%9D-2/";
     private static final String homePage = "http://handasaim.co.il/";
     private static final File scheduleFileXLSX = new File(System.getProperty("user.dir"), "schedule.xlsx");
     private static final File scheduleFileXLS = new File(System.getProperty("user.dir"), "schedule.xls");
+    private static final File sourceHTML = new File(Main.class.getResource("/nadav/tasher/handasaim/webbuilder/resources/index.html").getFile());
     private static JSONObject result = new JSONObject();
     private final String topColor = "#456789";
 
@@ -29,6 +49,7 @@ public class Main {
             String currentLink = getScheduleLink();
             Schedule schedule = downloadSchedule(currentLink);
             if (schedule != null) {
+                File outputFile = new File(args[0]);
                 JSONObject injectableJSON = new JSONObject();
                 JSONArray classroomsJSON = new JSONArray();
                 JSONArray teachersJSON = new JSONArray();
@@ -36,8 +57,44 @@ public class Main {
                 for (String m : schedule.getMessages()) {
                     messagesJSON.put(m);
                 }
+                for (Classroom c : schedule.getClassrooms()) {
+                    JSONObject classroom = new JSONObject();
+                    classroom.put("n", c.getName());
+                    classroom.put("g", c.getGrade());
+                    JSONArray subjectsJSON = new JSONArray();
+                    for (Subject s : c.getSubjects()) {
+                        JSONObject subject = new JSONObject();
+                        JSONArray teacherNames = new JSONArray();
+                        for (String n : s.getTeacherNames()) {
+                            teacherNames.put(n);
+                        }
+                        subject.put("n", s.getName());
+                        subject.put("d", s.getDescription());
+                        subject.put("bm", s.getBeginingMinute());
+                        subject.put("em", s.getEndingMinute());
+                        subject.put("h", s.getSchoolHour());
+                        subject.put("ns", teacherNames);
+                        subjectsJSON.put(subject);
+                    }
+                    classroom.put("sjs", subjectsJSON);
+                    classroomsJSON.put(classroom);
+                }
                 injectableJSON.put("day", schedule.getDay());
                 injectableJSON.put("messages", messagesJSON);
+                injectableJSON.put("classrooms", classroomsJSON);
+                if (outputFile.getParentFile().exists()) {
+                    try {
+                        String rawSource = IOUtils.toString(new FileInputStream(sourceHTML), Charsets.UTF_8);
+                        // Load JS Replacements
+                        rawSource = rawSource.replaceFirst(basicSearch("var schedule"), "var schedule = " + injectableJSON.toString() + ";");
+                        FileUtils.writeStringToFile(outputFile, rawSource);
+                        result.put("success", true);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        result.put("success", false);
+                    }
+                }
+                result.put("output_directory_exists", outputFile.getParentFile().exists());
             }
             result.put("schedule_is_null", schedule == null);
         }
@@ -97,5 +154,9 @@ public class Main {
             e.printStackTrace();
         }
         return file;
+    }
+
+    private static String basicSearch(String s) {
+        return "(" + s + "(|.+);)";
     }
 }
