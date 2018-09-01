@@ -2,6 +2,7 @@ package nadav.tasher.handasaim.webbuilder;
 
 import nadav.tasher.handasaim.webbuilder.appcore.AppCore;
 import nadav.tasher.handasaim.webbuilder.appcore.components.Schedule;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -28,6 +29,15 @@ public class Main {
             String currentLink = getScheduleLink();
             Schedule schedule = downloadSchedule(currentLink);
             if (schedule != null) {
+                JSONObject injectableJSON = new JSONObject();
+                JSONArray classroomsJSON = new JSONArray();
+                JSONArray teachersJSON = new JSONArray();
+                JSONArray messagesJSON = new JSONArray();
+                for (String m : schedule.getMessages()) {
+                    messagesJSON.put(m);
+                }
+                injectableJSON.put("day", schedule.getDay());
+                injectableJSON.put("messages", messagesJSON);
             }
             result.put("schedule_is_null", schedule == null);
         }
