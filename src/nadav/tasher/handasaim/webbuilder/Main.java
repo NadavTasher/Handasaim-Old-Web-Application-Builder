@@ -7,6 +7,7 @@ import nadav.tasher.handasaim.webbuilder.appcore.components.Subject;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -55,21 +56,21 @@ public class Main {
                 JSONArray teachersJSON = new JSONArray();
                 JSONArray messagesJSON = new JSONArray();
                 for (String m : schedule.getMessages()) {
-                    messagesJSON.put(m);
+                    messagesJSON.put(StringEscapeUtils.escapeJava(m));
                 }
                 for (Classroom c : schedule.getClassrooms()) {
                     JSONObject classroom = new JSONObject();
-                    classroom.put("n", c.getName());
+                    classroom.put("n", StringEscapeUtils.escapeJava(c.getName()));
                     classroom.put("g", c.getGrade());
                     JSONArray subjectsJSON = new JSONArray();
                     for (Subject s : c.getSubjects()) {
                         JSONObject subject = new JSONObject();
                         JSONArray teacherNames = new JSONArray();
                         for (String n : s.getTeacherNames()) {
-                            teacherNames.put(n);
+                            teacherNames.put(StringEscapeUtils.escapeJava(n));
                         }
-                        subject.put("n", s.getName());
-                        subject.put("d", s.getDescription());
+                        subject.put("n", StringEscapeUtils.escapeJava(s.getName()));
+//                        subject.put("d", StringEscapeUtils.escapeJava(s.getDescription()));
                         subject.put("bm", s.getBeginingMinute());
                         subject.put("em", s.getEndingMinute());
                         subject.put("h", s.getSchoolHour());

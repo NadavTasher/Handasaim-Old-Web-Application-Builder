@@ -25,5 +25,6 @@
     <orderEntry type="library" name="poi-scratchpad-3.17" level="project" />
     <orderEntry type="library" name="xmlbeans-2.6.0" level="project" />
     <orderEntry type="library" name="commons-io-2.6" level="project" />
+    <orderEntry type="library" name="commons-text-1.4" level="project" />
   </component>
 </module>

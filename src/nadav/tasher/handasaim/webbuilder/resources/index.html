@@ -2,13 +2,38 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-    <link rel="icon" href="web_res/icon.png">
-    <title>H+</title>
-    <style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <link rel="icon" href="web_res/icon.png">
+  <title>H+</title>
+  <style>
     .topBar {
       vertical-align: top;
+      border-radius: 10px;
+    }
+
+    .content {
+      vertical-align: center;
+      border-radius: 10px;
+    }
+
+    .lessonView {
+      background-color: #333;
+      border-radius: 10px;
+      width: inherit;
+    }
+
+    .lessonViewText {
+      color: #FFF;
+      font-size: 150%;
+      text-align: right;
+      padding: 8% 4%;
+    }
+
+    .lessonViewTeacher {}
+
+    .classroomSwitcher{
+      background-color: #333;
       border-radius: 10px;
     }
 
@@ -17,7 +42,7 @@
       width: 15%;
     }
 
-    html{
+    html {
       height: 100%;
       width: 100%;
       overflow: hidden;
@@ -32,8 +57,8 @@
       height: inherit;
     }
 
-    </style>
-    <script type="text/javascript">
+  </style>
+  <script type="text/javascript">
     var schedule = {};
     var topBarColor = "#888888";
     var iconColor = "#dd8833";
@@ -42,6 +67,8 @@
 
     function onPageLoad() {
       setupColors();
+      parseSchedule();
+      showView(document.getElementById("ט1"));
     }
 
     function setupColors() {
@@ -63,15 +90,56 @@
 
     function hideTopBar() {
       document.getElementById("topBar").style.visibility = "hidden";
+      document.getElementById("topBar").style.height="0";
     }
 
     function showTopBar() {
       document.getElementById("topBar").style.visibility = "visible";
+      document.getElementById("topBar").style.height="auto";
+    }
+
+    function hideView(view) {
+      view.style.visibility = "hidden";
+    }
+
+    function showView(view) {
+      view.style.visibility = "visible";
     }
 
     function setupBackground() {
       // document.body.style.backgroundColor = backColor;
       document.body.style.backgroundImage = 'linear-gradient(to bottom,' + topColor + ', ' + bottomColor + ')';
+    }
+
+    function parseSchedule() {
+      var content = document.getElementById("content");
+      for (var c = 0; c < schedule.classrooms.length; c++) {
+        var classroomView = document.createElement("div");
+        classroomView.id = schedule.classrooms[c].n;
+        for (var s = 0; s < schedule.classrooms[c].sjs.length; s++) {
+          // Create Lesson View
+          var lessonView = document.createElement("div");
+          lessonView.classList.add("lessonView");
+          // Create Lesson View Texts
+          var lessonViewTopText = document.createElement("p");
+          lessonViewTopText.classList.add("lessonViewText");
+          // Apply Variables
+          var lessonName = schedule.classrooms[c].sjs[s].n;
+          var lessonHour = schedule.classrooms[c].sjs[s].h;
+          lessonViewTopText.innerHTML = "\u200F"+lessonHour+". "+lessonName;
+
+          lessonView.appendChild(lessonViewTopText);
+          if (lessonName.length > 0) {
+            classroomView.appendChild(lessonView);
+          }
+        }
+        content.appendChild(classroomView);
+        hideView(classroomView);
+      }
+    }
+
+    function displayClassroomSwitcher(){
+
     }
 
     function setCookie(cname, cvalue) {
@@ -97,17 +165,27 @@
       return "";
     }
 
-    </script>
+  </script>
 </head>
 
 <body onload="onPageLoad()">
 <center>
     <div id="topBar" class="topBar">
+      <div id="menuIcons">
         <img src="web_res/class.svg" class="topBarIcon"/>
         <img src="web_res/icon.svg" class="topBarIcon"/>
         <img src="web_res/refresh.svg" class="topBarIcon"/>
+      </div>
+      <div id="classroomSwitcher" style="visibility: hidden;">
+      </div>
+      <div id="aboutView" style="visibility: hidden;">
+        <b>Handasaim+ For Web</b>
+        <i><b>Made by Nadav Tasher</b></i>
+        <i>compilerVersion</i>
+        <i>appCoreVersion</i>
+      </div>
     </div>
-    <div id="content">
+  <div id="content" class="content">
     </div>
     <div id="bottomBar">
     </div>
