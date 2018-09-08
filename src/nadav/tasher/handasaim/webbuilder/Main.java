@@ -43,7 +43,6 @@ public class Main {
     private static final File scheduleFileXLS = new File(System.getProperty("user.dir"), "schedule.xls");
     private static final File sourceHTML = new File(Main.class.getResource("/nadav/tasher/handasaim/webbuilder/resources/index.html").getFile());
     private static JSONObject result = new JSONObject();
-    private final String topColor = "#456789";
 
     public static void main(String[] args) {
         if (args.length > 0) {

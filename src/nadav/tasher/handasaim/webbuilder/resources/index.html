@@ -34,6 +34,10 @@
       padding: 8% 4%;
     }
 
+    .classroomSchedule{
+
+    }
+
     .lessonViewTeacher {}
 
     .classroomSwitcher {
@@ -104,10 +108,12 @@
 
     function hideView(view) {
       view.style.visibility = "hidden";
+      view.style.height = "0";
     }
 
     function showView(view) {
       view.style.visibility = "visible";
+      view.style.height = "auto";
     }
 
     function setupBackground() {
@@ -120,6 +126,7 @@
       for (var c = 0; c < schedule.classrooms.length; c++) {
         var classroomView = document.createElement("div");
         classroomView.id = schedule.classrooms[c].n;
+        classroomView.classList.add("classroomSchedule");
         for (var s = 0; s < schedule.classrooms[c].sjs.length; s++) {
           // Create Lesson View
           var lessonView = document.createElement("div");
