@@ -39,20 +39,9 @@
       /* font-size: 0; */
     }
 
-    #cornerTop{}
+    #cornerTop {}
 
-    #cornerBottom{}
-
-    #corner {
-      height: 14vh;
-      width: 14vh;
-      border-radius: 56vh;
-      background-color: #dd8833;
-      position: fixed;
-      bottom: 0;
-      right: 0;
-
-    }
+    #cornerBottom {}
 
     #topBar {
       vertical-align: top;
@@ -81,6 +70,38 @@
       height: inherit;
     }
 
+    #corner {
+      height: 14vh;
+      width: 14vh;
+      border-radius: 14vh 0 0 0;
+      -moz-border-radius: 14vh 0 0 0;
+      -webkit-border-radius: 14vh 0 0 0;
+      position: fixed;
+      bottom: 0;
+      right: 0;
+
+    }
+
+    #cornerContent {
+      height: 11vh;
+      width: 11vh;
+      position: fixed;
+      bottom: 0;
+      right: 0;
+    }
+
+    #cornerTop {
+      font-size: 140%;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    #cornerBottom {
+      font-size: 100%;
+      text-align: center;
+      vertical-align: middle;
+    }
+
     html {
       height: auto;
       width: 100%;
@@ -98,6 +119,7 @@
 
     p {
       font-family: Arial, ArialHebrew, sans-serif;
+      color: #FFF;
       margin: 1vh;
     }
   </style>
@@ -111,12 +133,13 @@
     function onPageLoad() {
       setupColors();
       parseSchedule();
-      showView(document.getElementById("ט1"));
+      setClassroom("ט1");
     }
 
     function setupColors() {
       setupTopBarColor();
       setupTopColor();
+      setupCornerColor();
       setupBackground();
     }
 
@@ -129,6 +152,10 @@
       meta.name = "theme-color";
       meta.content = topColor;
       document.getElementsByTagName('head')[0].appendChild(meta);
+    }
+
+    function setupCornerColor() {
+      document.getElementById("corner").style.backgroundColor = topColor + "80";
     }
 
     function hideTopBar() {
@@ -188,6 +215,15 @@
       }
     }
 
+    function setClassroom(classroomName) {
+      document.getElementById("cornerTop").innerHTML = classroomName;
+      document.getElementById("cornerBottom").innerHTML = schedule.day;
+      for (var i = 0; i < document.getElementsByClassName("classroomSchedule").length; i++) {
+        hideView(document.getElementsByClassName("classroomSchedule")[i]);
+      }
+      showView(document.getElementById(classroomName));
+    }
+
     function displayClassroomSwitcher() {
 
     }
@@ -242,8 +278,10 @@
     </div>
     <div id="bottomBar">
       <div id="corner">
-        <p id="cornerTop"/>
-        <p id="cornerBottom"/>
+        <div id="cornerContent">
+          <p id="cornerTop"/>
+          <p id="cornerBottom"/>
+        </div>
       </div>
     </div>
 </center>
