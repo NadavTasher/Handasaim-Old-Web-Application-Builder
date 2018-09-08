@@ -36,6 +36,7 @@ public class Main {
         d = description
         g = grade
      */
+    public static final String compilerVersion = "0.1";
 
     private static final String schedulePage = "http://handasaim.co.il/2018/08/31/%D7%9E%D7%A2%D7%A8%D7%9B%D7%AA-%D7%95%D7%A9%D7%99%D7%A0%D7%95%D7%99%D7%99%D7%9D-2/";
     private static final String homePage = "http://handasaim.co.il/";
@@ -87,6 +88,8 @@ public class Main {
                         String rawSource = IOUtils.toString(new FileInputStream(sourceHTML), Charsets.UTF_8);
                         // Load JS Replacements
                         rawSource = rawSource.replaceFirst(basicSearch("var schedule"), "var schedule = " + injectableJSON.toString() + ";");
+                        rawSource = rawSource.replaceAll("compilerVersion", "WebC v" + compilerVersion);
+                        rawSource = rawSource.replaceAll("appCoreVersion", "AppCore v" + AppCore.APPCORE_VERSION);
                         FileUtils.writeStringToFile(outputFile, rawSource);
                         result.put("success", true);
                     } catch (IOException e) {

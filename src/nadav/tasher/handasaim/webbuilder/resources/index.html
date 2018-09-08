@@ -31,6 +31,7 @@
 
     .topBarIcon {
       height: inherit;
+      vertical-align: middle;
       width: 8vh;
     }
 
@@ -46,7 +47,10 @@
     #topBar {
       vertical-align: top;
       border-radius: 10px;
-      height: 10vh;
+      height: auto;
+      width: inherit;
+      /* position: absolute;
+      vertical-align: top; */
     }
 
     #bottomBar {
@@ -68,6 +72,7 @@
 
     #menuIcons {
       height: inherit;
+      padding: 1vh;
     }
 
     #corner {
@@ -91,13 +96,13 @@
     }
 
     #cornerTop {
-      font-size: 140%;
+      font-size: 160%;
       text-align: center;
       vertical-align: middle;
     }
 
     #cornerBottom {
-      font-size: 100%;
+      font-size: 120%;
       text-align: center;
       vertical-align: middle;
     }
@@ -129,11 +134,13 @@
     var iconColor = "#dd8833";
     var topColor = "#00BA46";
     var bottomColor = "#00649C";
+    var classCookie = "class";
 
     function onPageLoad() {
+      hideTopBar();
       setupColors();
       parseSchedule();
-      setClassroom("ט1");
+      setClassroom((getCookie(classCookie) != "" && getCookie(classCookie) != "undefined") ? getCookie(classCookie) : schedule.classrooms[0].n);
     }
 
     function setupColors() {
@@ -159,13 +166,11 @@
     }
 
     function hideTopBar() {
-      document.getElementById("topBar").style.visibility = "hidden";
-      document.getElementById("topBar").style.height = "0";
+      hideView(document.getElementById("topBar"));
     }
 
     function showTopBar() {
-      document.getElementById("topBar").style.visibility = "visible";
-      document.getElementById("topBar").style.height = "auto";
+      showView(document.getElementById("topBar"));
     }
 
     function hideView(view) {
@@ -216,6 +221,7 @@
     }
 
     function setClassroom(classroomName) {
+      setCookie(classCookie, classroomName);
       document.getElementById("cornerTop").innerHTML = classroomName;
       document.getElementById("cornerBottom").innerHTML = schedule.day;
       for (var i = 0; i < document.getElementsByClassName("classroomSchedule").length; i++) {
@@ -224,8 +230,24 @@
       showView(document.getElementById(classroomName));
     }
 
+    function isHidden(view) {
+      return view.style.visibility == "hidden";
+    }
+
     function displayClassroomSwitcher() {
 
+    }
+
+    function toggleMenu() {
+      if (isHidden(document.getElementById("topBar"))) {
+        showTopBar();
+      } else {
+        hideTopBar();
+      }
+    }
+
+    function displayAbout() {
+      showView(document.getElementById("aboutView"));
     }
 
     function setCookie(cname, cvalue) {
@@ -268,16 +290,18 @@
       <div id="classroomSwitcher" class="hiddenView">
       </div>
       <div id="aboutView" class="hiddenView">
-        <b>Handasaim+ For Web</b>
-        <i><b>Made by Nadav Tasher</b></i>
-        <i>compilerVersion</i>
-        <i>appCoreVersion</i>
+        <p>
+          <b>Handasaim+ For Web</b><br/>
+          <i><b>Made by Nadav Tasher</b></i><br/>
+          <i>compilerVersion</i><br/>
+          <i>appCoreVersion</i>
+        </p>
       </div>
     </div>
   <div id="content">
     </div>
     <div id="bottomBar">
-      <div id="corner">
+      <div id="corner" onclick="toggleMenu()">
         <div id="cornerContent">
           <p id="cornerTop"/>
           <p id="cornerBottom"/>
