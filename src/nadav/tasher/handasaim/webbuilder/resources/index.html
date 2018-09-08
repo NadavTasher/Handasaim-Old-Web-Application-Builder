@@ -14,6 +14,7 @@
     .topBar {
       vertical-align: top;
       border-radius: 10px;
+      height: auto;
     }
 
     .content {
@@ -32,6 +33,11 @@
       font-size: 150%;
       text-align: right;
       padding: 8% 4%;
+    }
+
+    .hiddenView {
+      visibility: hidden;
+      height: 0;
     }
 
     .classroomSchedule{
@@ -64,6 +70,10 @@
       -o-background-size: cover;
       background-size: cover;
       height: inherit;
+    }
+
+    p {
+      font-family: Arial, ArialHebrew, sans-serif;
     }
   </style>
   <script type="text/javascript">
@@ -186,9 +196,9 @@
         <img src="web_res/icon.svg" class="topBarIcon"/>
         <img src="web_res/refresh.svg" class="topBarIcon"/>
       </div>
-      <div id="classroomSwitcher" style="visibility: hidden;">
+      <div id="classroomSwitcher" class="hiddenView">
       </div>
-      <div id="aboutView" style="visibility: hidden;">
+      <div id="aboutView" class="hiddenView">
         <b>Handasaim+ For Web</b>
         <i><b>Made by Nadav Tasher</b></i>
         <i>compilerVersion</i>
