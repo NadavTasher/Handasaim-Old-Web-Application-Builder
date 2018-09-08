@@ -5,23 +5,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, minimal-ui"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
-  <meta name="theme-color" content="#BF4141"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
   <link rel="apple-touch-icon" href="web_res/icon_apple.png"/>
   <link rel="icon" href="web_res/icon.png"/>
   <title>H+</title>
   <style>
-    .topBar {
-      vertical-align: top;
-      border-radius: 10px;
-      height: auto;
-    }
-
-    .content {
-      vertical-align: center;
-      border-radius: 10px;
-    }
-
     .lessonView {
       background-color: #333;
       border-radius: 10px;
@@ -37,51 +25,83 @@
 
     .hiddenView {
       visibility: hidden;
+      display: none;
       height: 0;
     }
 
-    .classroomSchedule{
+    .topBarIcon {
+      height: inherit;
+      width: 8vh;
+    }
+
+    .classroomSchedule {
+      /* display: flex; */
+      /* font-size: 0; */
+    }
+
+    #corner {
+      width: 20%;
+      height: 20%;
+      border-radius: 20%;
+      position: fixed;
+      bottom: -4px;
+      right: 10px;
 
     }
 
-    .lessonViewTeacher {}
+    #topBar {
+      vertical-align: top;
+      border-radius: 10px;
+      height: 10vh;
+    }
 
-    .classroomSwitcher {
+    #bottomBar {
+      position: absolute;
+      vertical-align: bottom;
+      height: auto;
+      width: auto;
+      /* position: relative; */
+    }
+
+    #content {
+      border-radius: 10px;
+    }
+
+    #classroomSwitcher {
       background-color: #333;
       border-radius: 10px;
     }
 
-    .topBarIcon {
-      height: 15%;
-      width: 15%;
+    #menuIcons {
+      height: inherit;
     }
 
     html {
       height: auto;
       width: 100%;
-      overflow: hidden;
+      overflow-x: hidden;
     }
 
     body {
-      background-color: #BF4141;
       background-repeat: no-repeat;
       -webkit-background-size: cover;
       -moz-background-size: cover;
       -o-background-size: cover;
       background-size: cover;
-      height: inherit;
+      min-height: 100vh;
     }
 
     p {
       font-family: Arial, ArialHebrew, sans-serif;
+      margin: 1vh;
     }
   </style>
   <script type="text/javascript">
     var schedule = {};
-    var topBarColor = "#888888";
+    var topBarColor = "#808080";
     var iconColor = "#dd8833";
-    var topColor = "#BF4141";
-    var bottomColor = "#FFB54B";
+    var topColor = "#00BA46";
+    var bottomColor = "#00649C";
 
     function onPageLoad() {
       setupColors();
@@ -118,17 +138,20 @@
 
     function hideView(view) {
       view.style.visibility = "hidden";
+      view.style.display = "none";
       view.style.height = "0";
     }
 
     function showView(view) {
       view.style.visibility = "visible";
+      view.style.display = "block";
       view.style.height = "auto";
     }
 
     function setupBackground() {
       // document.body.style.backgroundColor = backColor;
       document.body.style.backgroundImage = 'linear-gradient(to bottom,' + topColor + ', ' + bottomColor + ')';
+      document.body.style.backgroundColor = topColor;
     }
 
     function parseSchedule() {
@@ -147,8 +170,9 @@
           // Apply Variables
           var lessonName = schedule.classrooms[c].sjs[s].n;
           var lessonHour = schedule.classrooms[c].sjs[s].h;
+          // Set Text
           lessonViewTopText.innerHTML = "\u200F" + lessonHour + ". " + lessonName;
-
+          // Add To Layout
           lessonView.appendChild(lessonViewTopText);
           if (lessonName.length > 0) {
             classroomView.appendChild(lessonView);
@@ -185,16 +209,20 @@
       }
       return "";
     }
+
+    function refresh() {
+      document.location.reload(true);
+    }
   </script>
 </head>
 
 <body onload="onPageLoad()">
 <center>
-    <div id="topBar" class="topBar">
+  <div id="topBar">
       <div id="menuIcons">
-        <img src="web_res/class.svg" class="topBarIcon"/>
-        <img src="web_res/icon.svg" class="topBarIcon"/>
-        <img src="web_res/refresh.svg" class="topBarIcon"/>
+        <img src="web_res/class.svg" class="topBarIcon" onclick="displayClassroomSwitcher()"/>
+        <img src="web_res/icon.svg" class="topBarIcon" onclick="displayAbout()"/>
+        <img src="web_res/refresh.svg" class="topBarIcon" onclick="refresh()"/>
       </div>
       <div id="classroomSwitcher" class="hiddenView">
       </div>
@@ -205,9 +233,12 @@
         <i>appCoreVersion</i>
       </div>
     </div>
-  <div id="content" class="content">
+  <div id="content">
     </div>
     <div id="bottomBar">
+      <div id="corner">
+        <img src="web_res/icon.svg" class="topBarIcon"/>
+      </div>
     </div>
 </center>
 </body>
