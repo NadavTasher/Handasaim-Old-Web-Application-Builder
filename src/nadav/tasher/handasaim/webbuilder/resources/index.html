@@ -3,10 +3,12 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, minimal-ui">
-  <link rel="apple-touch-icon" href="web_res/icon_apple.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, minimal-ui"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
-  <link rel="icon" href="web_res/icon.png">
+  <meta name="theme-color" content="#BF4141"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <link rel="apple-touch-icon" href="web_res/icon_apple.png"/>
+  <link rel="icon" href="web_res/icon.png"/>
   <title>H+</title>
   <style>
     .topBar {
@@ -34,7 +36,7 @@
 
     .lessonViewTeacher {}
 
-    .classroomSwitcher{
+    .classroomSwitcher {
       background-color: #333;
       border-radius: 10px;
     }
@@ -45,12 +47,13 @@
     }
 
     html {
-      height: 100%;
+      height: auto;
       width: 100%;
       overflow: hidden;
     }
 
     body {
+      background-color: #BF4141;
       background-repeat: no-repeat;
       -webkit-background-size: cover;
       -moz-background-size: cover;
@@ -58,7 +61,6 @@
       background-size: cover;
       height: inherit;
     }
-
   </style>
   <script type="text/javascript">
     var schedule = {};
@@ -92,12 +94,12 @@
 
     function hideTopBar() {
       document.getElementById("topBar").style.visibility = "hidden";
-      document.getElementById("topBar").style.height="0";
+      document.getElementById("topBar").style.height = "0";
     }
 
     function showTopBar() {
       document.getElementById("topBar").style.visibility = "visible";
-      document.getElementById("topBar").style.height="auto";
+      document.getElementById("topBar").style.height = "auto";
     }
 
     function hideView(view) {
@@ -128,7 +130,7 @@
           // Apply Variables
           var lessonName = schedule.classrooms[c].sjs[s].n;
           var lessonHour = schedule.classrooms[c].sjs[s].h;
-          lessonViewTopText.innerHTML = "\u200F"+lessonHour+". "+lessonName;
+          lessonViewTopText.innerHTML = "\u200F" + lessonHour + ". " + lessonName;
 
           lessonView.appendChild(lessonViewTopText);
           if (lessonName.length > 0) {
@@ -140,7 +142,7 @@
       }
     }
 
-    function displayClassroomSwitcher(){
+    function displayClassroomSwitcher() {
 
     }
 
@@ -166,7 +168,6 @@
       }
       return "";
     }
-
   </script>
 </head>
 
