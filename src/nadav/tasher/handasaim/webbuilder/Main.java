@@ -32,9 +32,9 @@ public class Main {
     public static final String compilerVersion = "0.1";
     private static final String schedulePage = "http://handasaim.co.il/2018/08/31/%D7%9E%D7%A2%D7%A8%D7%9B%D7%AA-%D7%95%D7%A9%D7%99%D7%A0%D7%95%D7%99%D7%99%D7%9D-2/";
     private static final String homePage = "http://handasaim.co.il/";
+    private static final String sourceHTML = "/nadav/tasher/handasaim/webbuilder/resources/index.html";
     private static final File scheduleFileXLSX = new File(System.getProperty("user.dir"), "schedule.xlsx");
     private static final File scheduleFileXLS = new File(System.getProperty("user.dir"), "schedule.xls");
-    //    private static final File sourceHTML = new File(Main.class.getResource("/index.html").getFile());
     private static JSONObject result = new JSONObject();
 
     public static void main(String[] args) {
@@ -77,7 +77,7 @@ public class Main {
                 injectableJSON.put("classrooms", classroomsJSON);
                 if (outputFile.getParentFile().exists()) {
                     try {
-                        String rawSource = read(Main.class.getResourceAsStream("/nadav/tasher/handasaim/webbuilder/resources/index.html"));
+                        String rawSource = read(Main.class.getResourceAsStream(sourceHTML));
                         // Load JS Replacements
                         rawSource = rawSource.replaceFirst(basicSearch("var schedule"), "var schedule = " + injectableJSON.toString() + ";");
                         rawSource = rawSource.replaceAll("compilerVersion", "WebC v" + compilerVersion);
