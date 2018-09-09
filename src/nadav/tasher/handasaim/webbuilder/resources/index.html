@@ -40,6 +40,20 @@
       /* font-size: 0; */
     }
 
+    .switcherButton {
+      background-color: #333;
+      color: #FFF;
+      font-size: 150%;
+      text-align: center;
+      border-radius: 1vh;
+      padding: 4% 4%;
+    }
+
+    #aboutView {
+      margin: 2vh;
+      padding: 4vh;
+    }
+
     #cornerTop {}
 
     #cornerBottom {}
@@ -66,8 +80,7 @@
     }
 
     #classroomSwitcher {
-      background-color: #333;
-      border-radius: 10px;
+      padding: 2vh;
     }
 
     #menuIcons {
@@ -140,6 +153,7 @@
       hideTopBar();
       setupColors();
       parseSchedule();
+      setupSwitcher();
       setClassroom((getCookie(classCookie) != "" && getCookie(classCookie) != "undefined") ? getCookie(classCookie) : schedule.classrooms[0].n);
     }
 
@@ -163,6 +177,22 @@
 
     function setupCornerColor() {
       document.getElementById("corner").style.backgroundColor = topColor + "80";
+    }
+
+    function setupSwitcher() {
+      var switcher = document.getElementById("classroomSwitcher");
+      for (var c = 0; c < schedule.classrooms.length; c++) {
+        const name = schedule.classrooms[c].n;
+        var grade = schedule.classrooms[c].g;
+        var element = document.createElement("p");
+        element.classList.add("switcherButton");
+        element.onclick = function() {
+          setClassroom(name);
+          hideView(document.getElementById("classroomSwitcher"));
+        };
+        element.innerHTML = name;
+        switcher.appendChild(element);
+      }
     }
 
     function hideTopBar() {
@@ -234,28 +264,39 @@
       return view.style.visibility == "hidden";
     }
 
-    function displayClassroomSwitcher() {
-
-    }
-
     function toggleMenu() {
       if (isHidden(document.getElementById("topBar"))) {
+        hideView(document.getElementById("aboutView"));
+        hideView(document.getElementById("classroomSwitcher"));
         showTopBar();
       } else {
         hideTopBar();
       }
     }
 
-    function displayAbout() {
-      showView(document.getElementById("aboutView"));
+    function toggleAbout() {
+      if (isHidden(document.getElementById("aboutView"))) {
+        showView(document.getElementById("aboutView"));
+      } else {
+        hideView(document.getElementById("aboutView"));
+      }
+    }
+
+    function toggleSwitcher() {
+      if (isHidden(document.getElementById("classroomSwitcher"))) {
+        showView(document.getElementById("classroomSwitcher"));
+      } else {
+        hideView(document.getElementById("classroomSwitcher"));
+      }
     }
 
     function setCookie(cname, cvalue) {
+      cvalue = encodeURIComponent(cvalue);
       var exdays = 365;
       var d = new Date();
       d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
       var expires = "expires=" + d.toUTCString();
-      document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+      document.cookie = cname + "=" + cvalue + ";" + expires + ";domain=" + window.location.hostname + ";path=/";
     }
 
     function getCookie(cname) {
@@ -267,7 +308,7 @@
           c = c.substring(1);
         }
         if (c.indexOf(name) == 0) {
-          return c.substring(name.length, c.length);
+          return decodeURIComponent(c.substring(name.length, c.length));
         }
       }
       return "";
@@ -283,8 +324,8 @@
 <center>
   <div id="topBar">
       <div id="menuIcons">
-        <img src="web_res/class.svg" class="topBarIcon" onclick="displayClassroomSwitcher()"/>
-        <img src="web_res/icon.svg" class="topBarIcon" onclick="displayAbout()"/>
+        <img src="web_res/class.svg" class="topBarIcon" onclick="toggleSwitcher()"/>
+        <img src="web_res/icon.svg" class="topBarIcon" onclick="toggleAbout()"/>
         <img src="web_res/refresh.svg" class="topBarIcon" onclick="refresh()"/>
       </div>
       <div id="classroomSwitcher" class="hiddenView">
@@ -292,7 +333,7 @@
       <div id="aboutView" class="hiddenView">
         <p>
           <b>Handasaim+ For Web</b><br/>
-          <i><b>Made by Nadav Tasher</b></i><br/>
+          <i>Made by Nadav Tasher</i><br/>
           <i>compilerVersion</i><br/>
           <i>appCoreVersion</i>
         </p>
