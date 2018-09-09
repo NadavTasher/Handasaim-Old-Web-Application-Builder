@@ -2,14 +2,14 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, minimal-ui"/>
-  <meta name="apple-mobile-web-app-capable" content="yes"/>
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-  <link rel="apple-touch-icon" href="web_res/icon_apple.png"/>
-  <link rel="icon" href="web_res/icon.png"/>
-  <title>H+</title>
-  <style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, minimal-ui"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+    <link rel="apple-touch-icon" href="web_res/icon_apple.png"/>
+    <link rel="icon" href="web_res/icon.png"/>
+    <title>H+</title>
+    <style>
     .lessonView {
       background-color: #333;
       border-radius: 10px;
@@ -140,8 +140,9 @@
       color: #FFF;
       margin: 1vh;
     }
-  </style>
-  <script type="text/javascript">
+
+    </style>
+    <script type="text/javascript">
     var schedule = {};
     var topBarColor = "#808080";
     var iconColor = "#dd8833";
@@ -317,37 +318,38 @@
     function refresh() {
       document.location.reload(true);
     }
-  </script>
+
+    </script>
 </head>
 
 <body onload="onPageLoad()">
 <center>
-  <div id="topBar">
-      <div id="menuIcons">
-        <img src="web_res/class.svg" class="topBarIcon" onclick="toggleSwitcher()"/>
-        <img src="web_res/icon.svg" class="topBarIcon" onclick="toggleAbout()"/>
-        <img src="web_res/refresh.svg" class="topBarIcon" onclick="refresh()"/>
-      </div>
-      <div id="classroomSwitcher" class="hiddenView">
-      </div>
-      <div id="aboutView" class="hiddenView">
-        <p>
-          <b>Handasaim+ For Web</b><br/>
-          <i>Made by Nadav Tasher</i><br/>
-          <i>compilerVersion</i><br/>
-          <i>appCoreVersion</i>
-        </p>
-      </div>
+    <div id="topBar">
+        <div id="menuIcons">
+            <img src="web_res/class.svg" class="topBarIcon" onclick="toggleSwitcher()"/>
+            <img src="web_res/icon.svg" class="topBarIcon" onclick="toggleAbout()"/>
+            <img src="web_res/refresh.svg" class="topBarIcon" onclick="refresh()"/>
+        </div>
+        <div id="classroomSwitcher" class="hiddenView">
+        </div>
+        <div id="aboutView" class="hiddenView">
+            <p>
+                <b>Handasaim+ For Web</b><br/>
+                <i>Made by Nadav Tasher</i><br/>
+                <i>compilerVersion</i><br/>
+                <i>appCoreVersion</i>
+            </p>
+        </div>
     </div>
-  <div id="content">
+    <div id="content">
     </div>
     <div id="bottomBar">
-      <div id="corner" onclick="toggleMenu()">
-        <div id="cornerContent">
-          <p id="cornerTop"/>
-          <p id="cornerBottom"/>
+        <div id="corner" onclick="toggleMenu()">
+            <div id="cornerContent">
+                <p id="cornerTop"/>
+                <p id="cornerBottom"/>
+            </div>
         </div>
-      </div>
     </div>
 </center>
 </body>

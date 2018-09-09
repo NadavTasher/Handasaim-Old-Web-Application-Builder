@@ -42,7 +42,7 @@ public class Main {
     private static final String homePage = "http://handasaim.co.il/";
     private static final File scheduleFileXLSX = new File(System.getProperty("user.dir"), "schedule.xlsx");
     private static final File scheduleFileXLS = new File(System.getProperty("user.dir"), "schedule.xls");
-    private static final File sourceHTML = new File(Main.class.getResource("/nadav/tasher/handasaim/webbuilder/resources/index.html").getFile());
+    private static final File sourceHTML = new File(Main.class.getResource("index.html").getFile());
     private static JSONObject result = new JSONObject();
 
     public static void main(String[] args) {
