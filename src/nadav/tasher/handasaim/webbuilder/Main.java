@@ -4,9 +4,6 @@ import nadav.tasher.handasaim.webbuilder.appcore.AppCore;
 import nadav.tasher.handasaim.webbuilder.appcore.components.Classroom;
 import nadav.tasher.handasaim.webbuilder.appcore.components.Schedule;
 import nadav.tasher.handasaim.webbuilder.appcore.components.Subject;
-import org.apache.commons.io.Charsets;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -14,17 +11,13 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.regex.Pattern;
 
 public class Main {
-
     /*
         Shortcuts:
         n = name
@@ -37,12 +30,11 @@ public class Main {
         g = grade
      */
     public static final String compilerVersion = "0.1";
-
     private static final String schedulePage = "http://handasaim.co.il/2018/08/31/%D7%9E%D7%A2%D7%A8%D7%9B%D7%AA-%D7%95%D7%A9%D7%99%D7%A0%D7%95%D7%99%D7%99%D7%9D-2/";
     private static final String homePage = "http://handasaim.co.il/";
     private static final File scheduleFileXLSX = new File(System.getProperty("user.dir"), "schedule.xlsx");
     private static final File scheduleFileXLS = new File(System.getProperty("user.dir"), "schedule.xls");
-    private static final File sourceHTML = new File(Main.class.getResource("index.html").getFile());
+    //    private static final File sourceHTML = new File(Main.class.getResource("/index.html").getFile());
     private static JSONObject result = new JSONObject();
 
     public static void main(String[] args) {
@@ -85,12 +77,15 @@ public class Main {
                 injectableJSON.put("classrooms", classroomsJSON);
                 if (outputFile.getParentFile().exists()) {
                     try {
-                        String rawSource = IOUtils.toString(new FileInputStream(sourceHTML), Charsets.UTF_8);
+                        String rawSource = read(Main.class.getResourceAsStream("/nadav/tasher/handasaim/webbuilder/resources/index.html"));
                         // Load JS Replacements
                         rawSource = rawSource.replaceFirst(basicSearch("var schedule"), "var schedule = " + injectableJSON.toString() + ";");
                         rawSource = rawSource.replaceAll("compilerVersion", "WebC v" + compilerVersion);
                         rawSource = rawSource.replaceAll("appCoreVersion", "AppCore v" + AppCore.APPCORE_VERSION);
-                        FileUtils.writeStringToFile(outputFile, rawSource);
+                        FileWriter fileWriter = new FileWriter(outputFile);
+                        fileWriter.write(rawSource);
+                        fileWriter.flush();
+                        fileWriter.close();
                         result.put("success", true);
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -103,6 +98,17 @@ public class Main {
         }
         result.put("enough_args", args.length > 0);
         System.out.println(result.toString());
+    }
+
+    private static String read(InputStream is) throws IOException {
+        BufferedReader buf = new BufferedReader(new InputStreamReader(is));
+        String line = buf.readLine();
+        StringBuilder sb = new StringBuilder();
+        while (line != null) {
+            sb.append(line).append("\n");
+            line = buf.readLine();
+        }
+        return sb.toString();
     }
 
     private static Schedule downloadSchedule(String link) {
