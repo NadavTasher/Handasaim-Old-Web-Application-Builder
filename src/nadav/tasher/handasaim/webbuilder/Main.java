@@ -15,6 +15,9 @@ import java.io.*;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.util.Enumeration;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.regex.Pattern;
 
 public class Main {
@@ -29,72 +32,83 @@ public class Main {
         d = description
         g = grade
      */
-    public static final String compilerVersion = "0.1";
+    public static final String webVersion = "0.2";
     private static final String schedulePage = "http://handasaim.co.il/2018/08/31/%D7%9E%D7%A2%D7%A8%D7%9B%D7%AA-%D7%95%D7%A9%D7%99%D7%A0%D7%95%D7%99%D7%99%D7%9D-2/";
     private static final String homePage = "http://handasaim.co.il/";
     private static final String sourceHTML = "/nadav/tasher/handasaim/webbuilder/resources/index.html";
+    private static final String sourceResources = "/nadav/tasher/handasaim/webbuilder/resources/web_res";
     private static final File scheduleFileXLSX = new File(System.getProperty("user.dir"), "schedule.xlsx");
     private static final File scheduleFileXLS = new File(System.getProperty("user.dir"), "schedule.xls");
     private static JSONObject result = new JSONObject();
 
     public static void main(String[] args) {
         if (args.length > 0) {
-            String currentLink = getScheduleLink();
-            Schedule schedule = downloadSchedule(currentLink);
-            if (schedule != null) {
-                File outputFile = new File(args[0]);
-                JSONObject injectableJSON = new JSONObject();
-                JSONArray classroomsJSON = new JSONArray();
-                JSONArray teachersJSON = new JSONArray();
-                JSONArray messagesJSON = new JSONArray();
-                for (String m : schedule.getMessages()) {
-                    messagesJSON.put(StringEscapeUtils.escapeJava(m));
-                }
-                for (Classroom c : schedule.getClassrooms()) {
-                    JSONObject classroom = new JSONObject();
-                    classroom.put("n", StringEscapeUtils.escapeJava(c.getName()));
-                    classroom.put("g", c.getGrade());
-                    JSONArray subjectsJSON = new JSONArray();
-                    for (Subject s : c.getSubjects()) {
-                        JSONObject subject = new JSONObject();
-                        JSONArray teacherNames = new JSONArray();
-                        for (String n : s.getTeacherNames()) {
-                            teacherNames.put(StringEscapeUtils.escapeJava(n));
+            File outputFolder = new File(args[0]);
+            System.out.println(outputFolder);
+            if (outputFolder.exists()) {
+                if (outputFolder.isDirectory()) {
+                    String currentLink = getScheduleLink();
+                    Schedule schedule = downloadSchedule(currentLink);
+                    if (schedule != null) {
+                        JSONObject injectableJSON = new JSONObject();
+                        JSONArray classroomsJSON = new JSONArray();
+                        JSONArray teachersJSON = new JSONArray();
+                        JSONArray messagesJSON = new JSONArray();
+                        for (String m : schedule.getMessages()) {
+                            messagesJSON.put(StringEscapeUtils.escapeJava(m));
                         }
-                        subject.put("n", StringEscapeUtils.escapeJava(s.getName()));
+                        for (Classroom c : schedule.getClassrooms()) {
+                            JSONObject classroom = new JSONObject();
+                            classroom.put("n", StringEscapeUtils.escapeJava(c.getName()));
+                            classroom.put("g", c.getGrade());
+                            JSONArray subjectsJSON = new JSONArray();
+                            for (Subject s : c.getSubjects()) {
+                                JSONObject subject = new JSONObject();
+                                JSONArray teacherNames = new JSONArray();
+                                for (String n : s.getTeacherNames()) {
+                                    teacherNames.put(StringEscapeUtils.escapeJava(n));
+                                }
+                                subject.put("n", StringEscapeUtils.escapeJava(s.getName()));
 //                        subject.put("d", StringEscapeUtils.escapeJava(s.getDescription()));
-                        subject.put("bm", s.getBeginingMinute());
-                        subject.put("em", s.getEndingMinute());
-                        subject.put("h", s.getSchoolHour());
-                        subject.put("ns", teacherNames);
-                        subjectsJSON.put(subject);
+                                subject.put("bm", s.getBeginingMinute());
+                                subject.put("em", s.getEndingMinute());
+                                subject.put("h", s.getSchoolHour());
+                                subject.put("ns", teacherNames);
+                                subjectsJSON.put(subject);
+                            }
+                            classroom.put("sjs", subjectsJSON);
+                            classroomsJSON.put(classroom);
+                        }
+                        injectableJSON.put("day", schedule.getDay());
+                        injectableJSON.put("messages", messagesJSON);
+                        injectableJSON.put("classrooms", classroomsJSON);
+                        try {
+                            String rawSource = read(Main.class.getResourceAsStream(sourceHTML));
+                            // Load JS Replacements
+                            rawSource = rawSource.replaceFirst(basicSearch("var schedule"), "var schedule = " + injectableJSON.toString() + ";");
+                            rawSource = rawSource.replaceAll("webVersion", "App v" + webVersion);
+                            rawSource = rawSource.replaceAll("appCoreVersion", "AppCore v" + AppCore.APPCORE_VERSION);
+                            FileWriter fileWriter = new FileWriter(new File(outputFolder, "index.html"));
+                            fileWriter.write(rawSource);
+                            fileWriter.flush();
+                            fileWriter.close();
+                            result.put("success_index", true);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            result.put("success_index", false);
+                        }
+                        try {
+                            copyToDestination(new File(outputFolder, "web_res"), sourceResources);
+                            result.put("success_resources", true);
+                        } catch (Exception e) {
+                            result.put("success_resources", false);
+                        }
                     }
-                    classroom.put("sjs", subjectsJSON);
-                    classroomsJSON.put(classroom);
+                    result.put("schedule_is_null", schedule == null);
                 }
-                injectableJSON.put("day", schedule.getDay());
-                injectableJSON.put("messages", messagesJSON);
-                injectableJSON.put("classrooms", classroomsJSON);
-                if (outputFile.getParentFile().exists()) {
-                    try {
-                        String rawSource = read(Main.class.getResourceAsStream(sourceHTML));
-                        // Load JS Replacements
-                        rawSource = rawSource.replaceFirst(basicSearch("var schedule"), "var schedule = " + injectableJSON.toString() + ";");
-                        rawSource = rawSource.replaceAll("compilerVersion", "WebC v" + compilerVersion);
-                        rawSource = rawSource.replaceAll("appCoreVersion", "AppCore v" + AppCore.APPCORE_VERSION);
-                        FileWriter fileWriter = new FileWriter(outputFile);
-                        fileWriter.write(rawSource);
-                        fileWriter.flush();
-                        fileWriter.close();
-                        result.put("success", true);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        result.put("success", false);
-                    }
-                }
-                result.put("output_directory_exists", outputFile.getParentFile().exists());
+                result.put("is_directory", outputFolder.isDirectory());
             }
-            result.put("schedule_is_null", schedule == null);
+            result.put("directory_exists", outputFolder.exists());
         }
         result.put("enough_args", args.length > 0);
         System.out.println(result.toString());
@@ -133,6 +147,31 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    private static void copyToDestination(File output, String path) throws Exception {
+        final File jarFile = new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+        if (jarFile.isFile()) {
+            final JarFile jar = new JarFile(jarFile);
+            final Enumeration<JarEntry> entries = jar.entries();
+            while (entries.hasMoreElements()) {
+                final String name = entries.nextElement().getName();
+                if (name.startsWith(path.substring(1) + "/")) {
+                    System.out.println(name);
+                }
+            }
+            jar.close();
+        } else {
+            final URL url = Main.class.getResource(path);
+            if (url != null) {
+                final File resources = new File(url.toURI());
+                if (resources != null) {
+                    for (File resource : resources.listFiles()) {
+                        System.out.println(resource);
+                    }
+                }
+            }
         }
     }
 
