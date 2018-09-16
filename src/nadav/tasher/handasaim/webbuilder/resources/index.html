@@ -7,6 +7,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
     <link rel="apple-touch-icon" href="web_res/icon_apple.png"/>
+    <link rel="apple-touch-startup-image" href="web_res/loading_apple.png">
     <link rel="icon" href="web_res/icon.png"/>
     <title>H+</title>
     <style>
@@ -146,7 +147,7 @@
       min-height: 100vh;
     }
 
-    p {
+    p, a {
       font-family: Arial, ArialHebrew, sans-serif;
       color: #FFF;
       margin: 1vh;
@@ -180,7 +181,8 @@
       document.getElementById("topBar").style.backgroundColor = topBarColor;
     }
 
-    function setupTopColor() {
+    function setupTopColor() {<link rel="apple-touch-startup-image" href="/startup.png">
+
       var meta = document.createElement('meta');
       meta.name = "theme-color";
       meta.content = topColor;
@@ -371,10 +373,12 @@
                 <b>Handasaim+ Web</b><br/>
                 <i>Made by Nadav Tasher</i><br/>
                 <i>webVersion</i><br/>
-                <i>appCoreVersion</i>
-                <i>buildDate</i>
+                <i>appCoreVersion</i><br/>
+                <a id="installApp" href="web_res/app.mobileconfig">Install App</a>
             </p>
         </div>
+    </div>
+    <div id="popup">
     </div>
     <div id="content">
     </div>

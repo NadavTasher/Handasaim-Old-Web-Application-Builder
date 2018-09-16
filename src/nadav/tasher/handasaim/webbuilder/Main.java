@@ -18,7 +18,6 @@ import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.security.CodeSource;
-import java.util.Calendar;
 import java.util.Objects;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -91,7 +90,6 @@ public class Main {
                             rawSource = rawSource.replaceFirst(basicSearch("var schedule"), "var schedule = " + injectableJSON.toString() + ";");
                             rawSource = rawSource.replaceAll("webVersion", "App v" + webVersion);
                             rawSource = rawSource.replaceAll("appCoreVersion", "AppCore v" + AppCore.APPCORE_VERSION);
-                            rawSource = rawSource.replaceAll("buildDate", "TimeStamp " + Calendar.getInstance().toString());
                             FileWriter fileWriter = new FileWriter(new File(outputFolder, "index.html"));
                             fileWriter.write(rawSource);
                             fileWriter.flush();
