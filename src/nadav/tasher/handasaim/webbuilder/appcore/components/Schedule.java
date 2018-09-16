@@ -1,11 +1,26 @@
 package nadav.tasher.handasaim.webbuilder.appcore.components;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 
 public class Schedule {
+
     public static final int TYPE_REGULAR = 0;
     public static final int TYPE_PREDICTED = 1;
+    public static final String PARAMETER_NAME = "name";
+    public static final String PARAMETER_DAY = "day";
+    public static final String PARAMETER_DATE = "date";
+    public static final String PARAMETER_ORIGIN = "origin";
+    public static final String PARAMETER_TYPE = "type";
+    public static final String PARAMETER_MESSAGES = "messages";
+    public static final String PARAMETER_CLASSROOMS = "classrooms";
+    public static final String PARAMETER_SUBJECTS = "subjects";
+    public static final String PARAMETER_DESCRIPTION = "description";
+    public static final String PARAMETER_HOUR = "hour";
+
     private ArrayList<Classroom> classrooms;
     private ArrayList<Teacher> teachers;
     private ArrayList<String> messages;
@@ -51,8 +66,43 @@ public class Schedule {
         return messages;
     }
 
+    public JSONObject toJSON() {
+        JSONObject scheduleJSON = new JSONObject();
+        try {
+            scheduleJSON.put(PARAMETER_TYPE, type);
+            scheduleJSON.put(PARAMETER_DAY, day);
+            scheduleJSON.put(PARAMETER_NAME, name);
+            scheduleJSON.put(PARAMETER_DATE, date);
+            scheduleJSON.put(PARAMETER_ORIGIN, origin);
+            JSONArray messagesJSON = new JSONArray();
+            for (String m : messages) {
+                messagesJSON.put(m);
+            }
+            JSONArray classroomsJSON = new JSONArray();
+            for (Classroom c : classrooms) {
+                JSONObject classroomJSON = new JSONObject();
+                classroomJSON.put(PARAMETER_NAME, c.getName());
+                JSONArray subjectsJSON = new JSONArray();
+                for (Subject s : c.getSubjects()) {
+                    JSONObject subjectJSON = new JSONObject();
+                    subjectJSON.put(PARAMETER_HOUR, s.getSchoolHour());
+                    subjectJSON.put(PARAMETER_DESCRIPTION, s.getDescription());
+                    subjectsJSON.put(subjectJSON);
+                }
+                classroomJSON.put(PARAMETER_SUBJECTS, subjectsJSON);
+                classroomsJSON.put(classroomJSON);
+            }
+            scheduleJSON.put(PARAMETER_CLASSROOMS, classroomsJSON);
+            scheduleJSON.put(PARAMETER_MESSAGES, messagesJSON);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return scheduleJSON;
+    }
+
     public static class Builder {
         // Schedule Assembler
+
         private static final int COMPARE_CORRECT = 0;
         private static final int COMPARE_ADD_NAME = 1;
         private static final int COMPARE_ADD_SUBJECT = 2;
@@ -75,6 +125,41 @@ public class Schedule {
             builder.date = schedule.date;
             builder.name = schedule.name;
             builder.origin = schedule.origin;
+            return builder;
+        }
+
+        public static Builder fromJSON(JSONObject object) {
+            Builder builder;
+            try {
+                int type = object.getInt(PARAMETER_TYPE);
+                String day = object.getString(PARAMETER_DAY);
+                String origin = object.getString(PARAMETER_ORIGIN);
+                String date = object.getString(PARAMETER_DATE);
+                String name = object.getString(PARAMETER_NAME);
+                JSONArray messages = object.getJSONArray(PARAMETER_MESSAGES);
+                JSONArray classrooms = object.getJSONArray(PARAMETER_CLASSROOMS);
+                builder = new Builder(type);
+                for (int m = 0; m < messages.length(); m++) {
+                    builder.addMessage(messages.getString(m));
+                }
+                for (int c = 0; c < classrooms.length(); c++) {
+                    JSONObject classroomJSON = classrooms.getJSONObject(c);
+                    Classroom classroom = new Classroom(classroomJSON.getString(PARAMETER_NAME));
+                    JSONArray subjectsJSON = classroomJSON.getJSONArray(PARAMETER_SUBJECTS);
+                    for (int s = 0; s < subjectsJSON.length(); s++) {
+                        JSONObject subjectJSON = subjectsJSON.getJSONObject(s);
+                        classroom.addSubject(new Subject(classroom, subjectJSON.getInt(PARAMETER_HOUR), subjectJSON.getString(PARAMETER_DESCRIPTION)));
+                    }
+                    builder.addClassroom(classroom);
+                }
+                builder.setDate(date);
+                builder.setOrigin(origin);
+                builder.setDay(day);
+                builder.setName(name);
+            } catch (Exception e) {
+                e.printStackTrace();
+                builder = new Builder(TYPE_REGULAR);
+            }
             return builder;
         }
 
@@ -110,44 +195,6 @@ public class Schedule {
         private void assemble() {
             assembleTeachers();
             assembleSignature();
-        }
-
-        private int compareTeachers(Teacher scanTeacher, String teacherName, Subject subject) {
-            boolean subjectFound = false;
-            for (Subject scanSubject : scanTeacher.getSubjects()) {
-                if (scanSubject.getName().equals(subject.getName())) {
-                    subjectFound = true;
-                }
-            }
-            if (scanTeacher.getName().equals(teacherName)) {
-                if (teacherName.length() > 2) {
-                    return COMPARE_CORRECT;
-                } else {
-                    if (subjectFound)
-                        return COMPARE_CORRECT;
-                }
-            } else {
-                if ((scanTeacher.getName().length() > teacherName.length() && scanTeacher.getName().contains(teacherName))) {
-                    if (!scanTeacher.getNames().contains(teacherName))
-                        return COMPARE_ADD_NAME;
-                    else
-                        return COMPARE_CORRECT;
-                } else if ((scanTeacher.getName().length() < teacherName.length() && teacherName.contains(scanTeacher.getName()))) {
-                    if (subjectFound)
-                        return COMPARE_CORRECT;
-                }
-            }
-            return COMPARE_INCORRECT;
-        }
-
-        private void assembleSignature() {
-            StringBuilder signatureBuilder = new StringBuilder();
-            signatureBuilder.append("Signed By Schedule.Builder At ");
-            Calendar calendar = Calendar.getInstance();
-            signatureBuilder.append(calendar.get(Calendar.HOUR_OF_DAY));
-            signatureBuilder.append(":");
-            signatureBuilder.append(calendar.get(Calendar.MINUTE));
-            signature = signatureBuilder.toString();
         }
 
         private void assembleTeachers() {
@@ -186,6 +233,44 @@ public class Schedule {
                     }
                 }
             }
+        }
+
+        private int compareTeachers(Teacher scanTeacher, String teacherName, Subject subject) {
+            boolean subjectFound = false;
+            for (Subject scanSubject : scanTeacher.getSubjects()) {
+                if (scanSubject.getName().equals(subject.getName())) {
+                    subjectFound = true;
+                }
+            }
+            if (scanTeacher.getName().equals(teacherName)) {
+                if (teacherName.length() > 2) {
+                    return COMPARE_CORRECT;
+                } else {
+                    if (subjectFound)
+                        return COMPARE_CORRECT;
+                }
+            } else {
+                if ((scanTeacher.getName().length() > teacherName.length() && scanTeacher.getName().contains(teacherName))) {
+                    if (!scanTeacher.getNames().contains(teacherName))
+                        return COMPARE_ADD_NAME;
+                    else
+                        return COMPARE_CORRECT;
+                } else if ((scanTeacher.getName().length() < teacherName.length() && teacherName.contains(scanTeacher.getName()))) {
+                    if (subjectFound)
+                        return COMPARE_CORRECT;
+                }
+            }
+            return COMPARE_INCORRECT;
+        }
+
+        private void assembleSignature() {
+            StringBuilder signatureBuilder = new StringBuilder();
+            signatureBuilder.append("Signed By Schedule.Builder At ");
+            Calendar calendar = Calendar.getInstance();
+            signatureBuilder.append(calendar.get(Calendar.HOUR_OF_DAY));
+            signatureBuilder.append(":");
+            signatureBuilder.append(calendar.get(Calendar.MINUTE));
+            signature = signatureBuilder.toString();
         }
 
         private Schedule generate() {

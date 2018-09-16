@@ -72,8 +72,8 @@ public class Main {
                                 }
                                 subject.put("n", StringEscapeUtils.escapeJava(s.getName()));
 //                        subject.put("d", StringEscapeUtils.escapeJava(s.getDescription()));
-                                subject.put("bm", s.getBeginingMinute());
-                                subject.put("em", s.getEndingMinute());
+                                subject.put("bm", AppCore.getSchool().getStartingMinute(s));
+                                subject.put("em", AppCore.getSchool().getEndingMinute(s));
                                 subject.put("h", s.getSchoolHour());
                                 subject.put("ns", teacherNames);
                                 subjectsJSON.put(subject);

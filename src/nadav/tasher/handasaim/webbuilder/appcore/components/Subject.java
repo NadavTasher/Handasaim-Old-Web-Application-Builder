@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Subject {
-    private int schoolHour, beginingMinute, endingMinute;
+    private int schoolHour;
     private String description, subjectName;
     private boolean isTest = false;
     private ArrayList<String> teacherStrings = new ArrayList<>();
@@ -74,13 +74,5 @@ public class Subject {
 
     public ArrayList<String> getTeacherStrings() {
         return teacherStrings;
-    }
-
-    public int getBeginingMinute() {
-        return beginingMinute;
-    }
-
-    public int getEndingMinute() {
-        return endingMinute;
     }
 }

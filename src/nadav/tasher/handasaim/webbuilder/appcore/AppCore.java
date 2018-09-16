@@ -2,6 +2,7 @@ package nadav.tasher.handasaim.webbuilder.appcore;
 
 import nadav.tasher.handasaim.webbuilder.appcore.components.Classroom;
 import nadav.tasher.handasaim.webbuilder.appcore.components.Schedule;
+import nadav.tasher.handasaim.webbuilder.appcore.components.School;
 import nadav.tasher.handasaim.webbuilder.appcore.components.Subject;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
@@ -14,16 +15,17 @@ import org.apache.poi.xssf.usermodel.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class AppCore {
-    public static double APPCORE_VERSION = 1.6;
+    public static double APPCORE_VERSION = 1.8;
 
     /*
         Note That XSSF Resemmbles XLSX,
         While HSSF Resembles XLS.
         XSSF Is The Newer Format.
+
+        Since 1.8, AppCore is ONLY for essentials (e.g. reading excel, returning a school)
      */
 
     private static int startReadingRow(Sheet s) {
@@ -110,17 +112,6 @@ public class AppCore {
         }
     }
 
-    public static Schedule getSchedule(File excel) {
-        Schedule.Builder mBuilder = new Schedule.Builder(Schedule.TYPE_REGULAR);
-        Sheet sheet = getSheet(excel);
-        if (sheet != null) {
-            parseClassrooms(mBuilder, sheet);
-            parseMessages(mBuilder, sheet);
-            mBuilder.setDay(getDay(sheet));
-        }
-        return mBuilder.build();
-    }
-
     private static String readCell(Cell cell) {
         if (cell != null) {
             try {
@@ -146,103 +137,45 @@ public class AppCore {
             int cols = sheet.getRow(startReadingRow).getLastCellNum();
             for (int c = 1; c < cols; c++) {
                 String name = readCell(sheet.getRow(startReadingRow).getCell(c)).split(" ")[0];
-                Classroom cClassroom = new Classroom(name);
+                Classroom classroom = new Classroom(name);
                 int readStart = startReadingRow + 1;
                 for (int r = readStart; r < rows; r++) {
                     Row row = sheet.getRow(r);
-                    cClassroom.addSubject(new Subject(cClassroom, r - readStart, readCell(row.getCell(c))));
+                    String description = readCell(row.getCell(c));
+                    if (!description.isEmpty())
+                        classroom.addSubject(new Subject(classroom, r - readStart, description));
                 }
-                builder.addClassroom(cClassroom);
+                builder.addClassroom(classroom);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static int getBreak(int hour1, int hour2) {
-        return getStartMinute(hour2) - getEndMinute(hour1);
-    }
-
-    public static int getStartMinute(int schoolHour) {
-        switch (schoolHour) {
-            case 0:
-                return 465;
-            case 1:
-                return 510;
-            case 2:
-                return 555;
-            case 3:
-                return 615;
-            case 4:
-                return 660;
-            case 5:
-                return 730;
-            case 6:
-                return 775;
-            case 7:
-                return 830;
-            case 8:
-                return 875;
-            case 9:
-                return 930;
-            case 10:
-                return 975;
-            case 11:
-                return 1020;
-            case 12:
-                return 1065;
-        }
-        return getStartMinute(0);
-    }
-
-    public static int getEndMinute(int schoolHour) {
-        return getStartMinute(schoolHour) + 45;
-    }
-
-    public static String convertMinuteToTime(int minute) {
-        int hours = minute / 60;
-        int minutes = minute % 60;
-        StringBuilder timeBuilder = new StringBuilder();
-        timeBuilder.append(hours);
-        timeBuilder.append(":");
-        if (minutes < 10) timeBuilder.append(0);
-        timeBuilder.append(minutes);
-        return timeBuilder.toString();
-    }
-
     private static String getDay(Sheet s) {
         return readCell(s.getRow(0).getCell(0));
     }
 
-    public static String getGrades(ArrayList<Classroom> classrooms) {
-        if (classrooms.size() != 1) {
-            int previousGrade = Classroom.UNKNOWN_GRADE;
-            for (Classroom currentClassroom : classrooms) {
-                if (currentClassroom.getGrade() == previousGrade || previousGrade == Classroom.UNKNOWN_GRADE) {
-                    previousGrade = currentClassroom.getGrade();
-                } else {
-                    previousGrade = Classroom.UNKNOWN_GRADE;
-                    break;
-                }
-            }
-            switch (previousGrade) {
-                case Classroom.NINTH_GRADE:
-                    return "ט'";
-                case Classroom.TENTH_GRADE:
-                    return "י'";
-                case Classroom.ELEVENTH_GRADE:
-                    return "יא'";
-                case Classroom.TWELVETH_GRADE:
-                    return "יב'";
-            }
-            StringBuilder allGrades = new StringBuilder();
-            for (Classroom currentClassroom : classrooms) {
-                if (allGrades.length() != 0) allGrades.append(", ");
-                allGrades.append(currentClassroom.getName());
-            }
-            return allGrades.toString();
-        } else {
-            return classrooms.get(0).getName();
+    public static Schedule getSchedule(File excel) {
+        Schedule.Builder mBuilder = new Schedule.Builder(Schedule.TYPE_REGULAR);
+        Sheet sheet = getSheet(excel);
+        if (sheet != null) {
+            parseClassrooms(mBuilder, sheet);
+            parseMessages(mBuilder, sheet);
+            mBuilder.setDay(getDay(sheet));
         }
+        return mBuilder.build();
+    }
+
+    public static Schedule getSchedule(File excel, String name, String date, String origin) {
+        Schedule.Builder builder = Schedule.Builder.fromSchedule(getSchedule(excel));
+        builder.setName(name);
+        builder.setOrigin(origin);
+        builder.setDate(date);
+        return builder.build();
+    }
+
+    public static School getSchool() {
+        return new School(new int[]{465, 510, 555, 615, 660, 730, 775, 830, 875, 930, 975, 1020, 1065});
     }
 }
