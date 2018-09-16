@@ -15,8 +15,11 @@ import java.io.*;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.security.CodeSource;
 import java.util.Calendar;
+import java.util.Objects;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -102,7 +105,6 @@ public class Main {
                             copyResources(new File(outputFolder, "web_res"));
                             result.put("success_resources", true);
                         } catch (Exception e) {
-                            e.printStackTrace();
                             result.put("success_resources", false);
                         }
                     }
@@ -172,32 +174,26 @@ public class Main {
         CodeSource src = Main.class.getProtectionDomain().getCodeSource();
         if (src != null) {
             URL jar = src.getLocation();
-            ZipInputStream zip = new ZipInputStream(jar.openStream());
-            while (true) {
-                ZipEntry e = zip.getNextEntry();
-                System.out.println("Hrere");
-                if (e == null)
-                    break;
-                String name = e.getName();
-                System.out.println(name);
-                if (name.contains(sourceResources.substring(1))) {
-                    String fileName = name.split("/")[name.split("/").length - 1];
-                    extractFile(name, new File(output, fileName));
+            if (jar.toString().endsWith(".jar")) {
+                ZipInputStream zip = new ZipInputStream(jar.openStream());
+                while (true) {
+                    ZipEntry e = zip.getNextEntry();
+                    if (e == null)
+                        break;
+                    String name = e.getName();
+                    if (name.contains(sourceResources.substring(1))) {
+                        String fileName = name.split("/")[name.split("/").length - 1];
+                        extractFile(name, new File(output, fileName));
+                    }
+                }
+            } else {
+                for (File f : Objects.requireNonNull(new File(Main.class.getResource(sourceResources).toURI()).listFiles())) {
+                    Files.copy(new FileInputStream(f), new File(output, f.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING);
                 }
             }
         } else {
-            System.out.println("Fali");
+            throw new Exception("Failed To Copy Resources");
         }
-        //        System.out.println("File "+folder.toString());
-//        for(File f:folder.listFiles()){
-//            System.out.println(f.toString());
-//            Files.copy(new FileInputStream(f),new File(output, f.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING);
-//        }
-        //        for(URL url:Resources.getResourceURLs(Main.class)){
-//            System.out.println(url);
-//            Files.copy(url.openStream(), new File(output, new File(url.toURI()).getName()).toPath(), StandardCopyOption.REPLACE_EXISTING);
-//        }
-
     }
 
     private static String getScheduleLink() {
