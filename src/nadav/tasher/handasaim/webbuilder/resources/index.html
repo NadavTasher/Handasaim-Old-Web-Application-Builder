@@ -57,6 +57,17 @@
       padding: 4% 4%;
     }
 
+    .button {
+      background-color: #333;
+      color: white;
+      font-size: 150%;
+      display: table-cell;
+      min-height: 8vh;
+      height: 8vh;
+      padding: 5%;
+      width: 30vw;
+    }
+
     #aboutView {
       margin: 2vh;
       padding: 4vh;
@@ -121,7 +132,7 @@
       right: 0;
     }
 
-    right #cornerTop {
+    #cornerTop {
       font-size: 160%;
       text-align: center;
       vertical-align: middle;
@@ -131,6 +142,27 @@
       font-size: 120%;
       text-align: center;
       vertical-align: middle;
+    }
+
+    #popupInstall {
+      background-color: #888888a0;
+      border-radius: 10px;
+      min-height: 14vh;
+      padding: 4vh;
+    }
+
+    #installText {
+      font-size: 175%;
+    }
+
+    #installYeah {
+      background-color: #00AA0080;
+      border-radius: 10px 0 0 10px;
+    }
+
+    #installNah {
+      background-color: #AA000080;
+      border-radius: 0 10px 10px 0;
     }
 
     html {
@@ -148,9 +180,12 @@
       min-height: 100vh;
     }
 
-    p, a {
+    p,
+    a {
       font-family: Arial, ArialHebrew, sans-serif;
       color: #FFF;
+      vertical-align: middle;
+      text-align: center;
       margin: 1vh;
     }
 
@@ -169,6 +204,7 @@
       parseSchedule();
       setupSwitcher();
       setClassroom((getCookie(classCookie) != "" && getCookie(classCookie) != "undefined") ? getCookie(classCookie) : schedule.classrooms[0].n);
+      showInstallPopup();
     }
 
     function setupColors() {
@@ -298,6 +334,12 @@
       showView(document.getElementById(classroomName));
     }
 
+    function showInstallPopup() {
+      if (getCookie("popupInstall") != "true") {
+        showView(document.getElementById("popupInstall"));
+      }
+    }
+
     function isHidden(view) {
       return view.style.visibility == "hidden";
     }
@@ -375,13 +417,18 @@
                 <i>Made by Nadav Tasher</i><br/>
                 <i>webVersion</i><br/>
                 <i>appCoreVersion</i><br/>
-                <a id="installApp" href="web_res/appsigned.mobileconfig">Install App</a>
+                <a id="installApp" href="web_res/app.mobileconfig">Install App</a>
             </p>
         </div>
     </div>
-    <div id="popup">
-    </div>
     <div id="content">
+        <div id="popupInstall" class="hiddenView">
+            <p id="installText">
+                <b>Install To Your iPhone®</b>
+            </p>
+            <p id="installYeah" class="button">Install</p>
+            <p id="installNah" class="button">I'll Skip.</p>
+        </div>
     </div>
     <div id="bottomBar">
         <div id="corner" onclick="toggleMenu()">
