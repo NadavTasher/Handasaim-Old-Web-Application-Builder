@@ -394,6 +394,16 @@
       return "";
     }
 
+    function doneInstall(){
+      setCookie("popupInstall","true");
+      hideView(document.getElementById("popupInstall"));
+    }
+
+    function installApp(){
+      doneInstall();
+      document.location.href="web_res/app.mobileconfig";
+    }
+
     function refresh() {
       document.location.reload(true);
     }
@@ -426,8 +436,8 @@
             <p id="installText">
                 <b>Install To Your iPhone®</b>
             </p>
-            <p id="installYeah" class="button">Install</p>
-            <p id="installNah" class="button">I'll Skip.</p>
+            <p id="installYeah" onclick="installApp()" class="button">Install</p>
+            <p id="installNah" onclick="doneInstall()" class="button">I'll Skip.</p>
         </div>
     </div>
     <div id="bottomBar">
