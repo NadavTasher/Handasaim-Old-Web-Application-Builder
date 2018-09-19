@@ -8,9 +8,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
     <meta name="apple-mobile-web-app-title" content="H+">
     <link rel="apple-touch-icon" href="web_res/icon_apple.png"/>
-    <link rel="apple-touch-startup-image" href="web_res/loading_apple.png">
     <link rel="icon" href="web_res/icon.png"/>
-    <title>Handasaim | הנדסאים</title>
+    <title>H+</title>
     <style>
     .lessonView {
       background-color: #333;
@@ -193,11 +192,12 @@
     </style>
     <script type="text/javascript">
     var schedule = {};
-    var topBarColor = "#808080";
-    var iconColor = "#dd8833";
-    var topColor = "#00827E";
-    var bottomColor = "#00649C";
-    var classCookie = "class";
+    var topBarColor = "#808080",
+      iconColor = "#dd8833",
+      topColor = "#00827E",
+      bottomColor = "#00649C";
+    var classCookie = "class",
+      installCookie = "popupInstall";
 
     function onPageLoad() {
       hideTopBar();
@@ -336,7 +336,7 @@
     }
 
     function showInstallPopup() {
-      if (getCookie("popupInstall") != "true") {
+      if (getCookie(installCookie) != "true" && findGetParameter("install") != "true") {
         showView(document.getElementById("popupInstall"));
       }
     }
@@ -395,14 +395,27 @@
       return "";
     }
 
-    function doneInstall(){
-      setCookie("popupInstall","true");
+    function findGetParameter(parameterName) {
+      var result = null,
+        tmp = [];
+      location.search
+        .substr(1)
+        .split("&")
+        .forEach(function(item) {
+          tmp = item.split("=");
+          if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+        });
+      return result;
+    }
+
+    function doneInstall() {
+      setCookie(installCookie, "true");
       hideView(document.getElementById("popupInstall"));
     }
 
-    function installApp(){
+    function installApp() {
       doneInstall();
-      document.location.href="web_res/app.mobileconfig";
+      document.location.href = "web_res/handasaim.mobileconfig";
     }
 
     function refresh() {
@@ -428,7 +441,7 @@
                 <i>Made by Nadav Tasher</i><br/>
                 <i>webVersion</i><br/>
                 <i>appCoreVersion</i><br/>
-                <a id="installApp" href="web_res/app.mobileconfig">Install App</a>
+                <a id="installApp" href="web_res/handasaim.mobileconfig">Install App</a>
             </p>
         </div>
     </div>
