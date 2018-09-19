@@ -20,7 +20,30 @@
     .lessonViewTime {
       font-size: 150%;
       text-align: center;
+      vertical-align: middle;
       padding: 4% 4%;
+      font-style: italic;
+      display: inline-block;
+      width: 50%;
+      margin: 0 auto;
+    }
+
+    .lessonViewBottom{
+      padding: 0;
+      margin: 0;
+      display: -webkit-box;
+      display: -moz-box;
+      display: -ms-flexbox;
+      display: -webkit-flex;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .lessonViewTeacher {
+      font-size: 150%;
+      text-align: center;
+      padding: 2% 4%;
       font-style: italic;
     }
 
@@ -43,8 +66,6 @@
     }
 
     .classroomSchedule {
-      /* display: flex; */
-      /* font-size: 0; */
     }
 
     .switcherButton {
@@ -284,21 +305,34 @@
           var lessonName = schedule.classrooms[c].sjs[s].n;
           var lessonHour = schedule.classrooms[c].sjs[s].h;
           if (lessonName.length > 0) {
-            var lessonView = document.createElement("div");
-            var top = document.createElement("p");
-            var bottom = document.createElement("div");
-            var time = document.createElement("p");
+            const lessonView = document.createElement("div");
+            const top = document.createElement("p");
+            const bottom = document.createElement("div");
+            const time = document.createElement("p");
+            const teachers = document.createElement("div");
+            teachers.style.display = "inline-block";
 
+
+            bottom.classList.add("lessonViewBottom");
             time.classList.add("lessonViewTime");
             top.classList.add("lessonViewText");
             lessonView.classList.add("lessonView");
-            hideView(bottom);
+
+            for (var t = 0; t < schedule.classrooms[c].sjs[s].ns.length; t++) {
+              var teacher = schedule.classrooms[c].sjs[s].ns[t];
+              var teacherName = document.createElement("p");
+              teacherName.classList.add("lessonViewTeacher");
+              teacherName.innerHTML = teacher;
+              teachers.appendChild(teacherName);
+            }
 
             top.innerHTML = "\u200F" + lessonHour + ". " + lessonName;
             time.innerHTML = minuteToTime(schedule.classrooms[c].sjs[s].bm) + " - " + minuteToTime(schedule.classrooms[c].sjs[s].em);
 
+            time.style.height = window.getComputedStyle(teachers).height;
+
+            hideView(bottom);
             lessonView.onclick = function() {
-              console.log("FUN");
               if (isHidden(bottom)) {
                 showView(bottom);
               } else {
@@ -307,6 +341,7 @@
             };
 
             bottom.appendChild(time);
+            bottom.appendChild(teachers);
             lessonView.appendChild(top);
             lessonView.appendChild(bottom);
             classroomView.appendChild(lessonView);
@@ -318,11 +353,12 @@
     }
 
     function minuteToTime(minute) {
+      var minutes = minute % 60;
       var time = "";
-      time += minute / 60;
+      time += (minute - minutes) / 60;
       time += ":";
-      time += (minute <= 9) ? "0" : "";
-      time += minute % 60;
+      time += (minutes < 10) ? "0" : "";
+      time += minutes;
       return time;
     }
 
@@ -449,7 +485,7 @@
     <div id="content">
         <div id="popupInstall" class="hiddenView">
             <p id="installText">
-                <b>Install To Your iPhone®</b>
+                <b>Install On Your iPhone®</b>
             </p>
             <p id="installYeah" onclick="installApp()" class="button">Install</p>
             <p id="installNah" onclick="doneInstall()" class="button">I'll Skip.</p>
