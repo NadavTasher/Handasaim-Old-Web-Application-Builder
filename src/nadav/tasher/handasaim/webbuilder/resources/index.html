@@ -147,8 +147,9 @@
       background-color: #888888a0;
       border-radius: 10px;
       min-height: 14vh;
-      padding: 4vh;
-      margin: 1vh;
+      padding: 3vh;
+      margin: 0;
+      width: inherit;
     }
 
     #installText {
@@ -336,7 +337,7 @@
     }
 
     function showInstallPopup() {
-      if (getCookie(installCookie) != "true" && findGetParameter("install") != "true") {
+      if (getCookie(installCookie) != "true" && findGetParameter("install") != "false") {
         showView(document.getElementById("popupInstall"));
       }
     }
