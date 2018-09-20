@@ -21,13 +21,22 @@
       font-size: 150%;
       text-align: center;
       vertical-align: middle;
-      padding: 4% 4%;
+      /* padding: 2% 4%; */
       font-style: italic;
-      display: inline-block;
+      flex: 1 1;
+      white-space: pre;
+      display: table-cell;
+
+    }
+
+    .lessonViewBottomTable{
+      width: fill-available;
+      width: -webkit-fill-available;
+      table-layout: fixed;
     }
 
     .lessonViewBottom{
-      padding: 0;
+      padding: 0 2%;
       margin: 0;
       display: -webkit-box;
       display: -moz-box;
@@ -41,8 +50,14 @@
     .lessonViewTeacher {
       font-size: 150%;
       text-align: center;
-      padding: 2% 4%;
+      /* padding: 2% 4%; */
       font-style: italic;
+      white-space: pre;
+    }
+
+    .lessonViewTeachers{
+      flex: 1 1;
+      display: table-cell;
     }
 
     .lessonViewText {
@@ -114,10 +129,6 @@
       width: auto;
     }
 
-    #content {
-      border-radius: 10px;
-    }
-
     #classroomSwitcher {
       padding: 2vh;
     }
@@ -164,7 +175,7 @@
       border-radius: 10px;
       min-height: 14vh;
       padding: 3vh;
-      margin: 0;
+      margin: 1vh 0 0 0;
       width: inherit;
     }
 
@@ -310,12 +321,13 @@
             const lessonView = document.createElement("div");
             const top = document.createElement("p");
             const bottom = document.createElement("div");
+            const bottomTable = document.createElement("table");
             const time = document.createElement("p");
             const teachers = document.createElement("div");
-            teachers.style.display = inlineBlock;
-
 
             bottom.classList.add("lessonViewBottom");
+            bottomTable.classList.add("lessonViewBottomTable");
+            teachers.classList.add("lessonViewTeachers");
             time.classList.add("lessonViewTime");
             top.classList.add("lessonViewText");
             lessonView.classList.add("lessonView");
@@ -328,10 +340,10 @@
               teachers.appendChild(teacherName);
             }
 
+            // bottomTable.cellSpacing = "10";
+
             top.innerHTML = "\u200F" + lessonHour + ". " + lessonName;
             time.innerHTML = minuteToTime(schedule.classrooms[c].sjs[s].bm) + " - " + minuteToTime(schedule.classrooms[c].sjs[s].em);
-
-            time.style.height = window.getComputedStyle(teachers).height;
 
             hideView(bottom);
             lessonView.onclick = function() {
@@ -342,10 +354,11 @@
               }
             };
 
-            bottom.appendChild(time);
-            bottom.appendChild(teachers);
+            bottomTable.appendChild(time);
+            bottomTable.appendChild(teachers);
             lessonView.appendChild(top);
             lessonView.appendChild(bottom);
+            bottom.appendChild(bottomTable);
             classroomView.appendChild(lessonView);
           }
         }
