@@ -35,7 +35,7 @@ public class Main {
         d = description
         g = grade
      */
-    public static final String webVersion = "0.3";
+    public static final double webVersion = 0.3;
     private static final String schedulePage = "http://handasaim.co.il/2018/08/31/%D7%9E%D7%A2%D7%A8%D7%9B%D7%AA-%D7%95%D7%A9%D7%99%D7%A0%D7%95%D7%99%D7%99%D7%9D-2/";
     private static final String homePage = "http://handasaim.co.il/";
     private static final String sourceHTML = "/nadav/tasher/handasaim/webbuilder/resources/index.html";
