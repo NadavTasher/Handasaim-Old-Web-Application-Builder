@@ -24,8 +24,6 @@
       padding: 4% 4%;
       font-style: italic;
       display: inline-block;
-      width: 50%;
-      margin: 0 auto;
     }
 
     .lessonViewBottom{
@@ -107,8 +105,6 @@
       border-radius: 10px;
       height: auto;
       width: inherit;
-      /* position: absolute;
-      vertical-align: top; */
     }
 
     #bottomBar {
@@ -116,7 +112,6 @@
       vertical-align: bottom;
       height: auto;
       width: auto;
-      /* position: relative; */
     }
 
     #content {
@@ -214,12 +209,13 @@
     </style>
     <script type="text/javascript">
     var schedule = {};
-    var topBarColor = "#808080",
+    const topBarColor = "#808080",
       iconColor = "#dd8833",
       topColor = "#00827E",
       bottomColor = "#00649C";
-    var classCookie = "class",
+    const classCookie = "class",
       installCookie = "popupInstall";
+    const block="block",inlineBlock="inline-block",flex="flex";
 
     function onPageLoad() {
       hideTopBar();
@@ -283,10 +279,14 @@
       view.style.height = "0";
     }
 
-    function showView(view) {
+    function showViewByDisplay(view, display) {
       view.style.visibility = "visible";
-      view.style.display = "block";
+      view.style.display = display;
       view.style.height = "auto";
+    }
+
+    function showView(view) {
+      showViewByDisplay(view,block);
     }
 
     function setupBackground() {
@@ -310,7 +310,7 @@
             const bottom = document.createElement("div");
             const time = document.createElement("p");
             const teachers = document.createElement("div");
-            teachers.style.display = "inline-block";
+            teachers.style.display = inlineBlock;
 
 
             bottom.classList.add("lessonViewBottom");
@@ -334,7 +334,7 @@
             hideView(bottom);
             lessonView.onclick = function() {
               if (isHidden(bottom)) {
-                showView(bottom);
+                showViewByDisplay(bottom,flex);
               } else {
                 hideView(bottom);
               }
