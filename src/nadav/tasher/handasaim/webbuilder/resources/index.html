@@ -215,7 +215,9 @@
       bottomColor = "#00649C";
     const classCookie = "class",
       installCookie = "popupInstall";
-    const block="block",inlineBlock="inline-block",flex="flex";
+    const block = "block",
+      inlineBlock = "inline-block",
+      flex = "flex";
 
     function onPageLoad() {
       hideTopBar();
@@ -286,7 +288,7 @@
     }
 
     function showView(view) {
-      showViewByDisplay(view,block);
+      showViewByDisplay(view, block);
     }
 
     function setupBackground() {
@@ -334,7 +336,7 @@
             hideView(bottom);
             lessonView.onclick = function() {
               if (isHidden(bottom)) {
-                showViewByDisplay(bottom,flex);
+                showViewByDisplay(bottom, flex);
               } else {
                 hideView(bottom);
               }
