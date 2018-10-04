@@ -1,4 +1,4 @@
-package nadav.tasher.handasaim.webbuilder.appcore.components;
+package nadav.tasher.handasaim.architecture.appcore.components;
 
 public class School {
     private int[] startTimes;
@@ -20,7 +20,7 @@ public class School {
     }
 
     public int getStartingMinute(int hour) {
-        return (hour < startTimes.length && hour >= 0) ? startTimes[hour] : 0;
+        return (hour < startTimes.length && hour >= 0) ? startTimes[hour] : (startTimes.length > 0) ? startTimes[0] : 0;
     }
 
     public int getEndingMinute(Subject subject) {

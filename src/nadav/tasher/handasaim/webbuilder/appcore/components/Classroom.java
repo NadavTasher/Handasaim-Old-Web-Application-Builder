@@ -1,6 +1,7 @@
-package nadav.tasher.handasaim.webbuilder.appcore.components;
+package nadav.tasher.handasaim.architecture.appcore.components;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Classroom {
 
@@ -11,13 +12,13 @@ public class Classroom {
     public static final int TWELVETH_GRADE = 12;
 
     private String name;
-    private ArrayList<Subject> subjects = new ArrayList<>();
+    private ArrayList<Subject> subjects=new ArrayList<>();
 
     public Classroom(String name) {
         this.name = name;
     }
 
-    public void addSubject(Subject subject) {
+    public void addSubject(Subject subject){
         subjects.add(subject);
     }
 
@@ -33,17 +34,17 @@ public class Classroom {
         this.name = name;
     }
 
-    public int getGrade() {
-        if (name.startsWith("ט")) {
+    public int getGrade(){
+        if(name.startsWith("ט")){
             return NINTH_GRADE;
-        } else if (name.startsWith("י")) {
-            if (name.contains("א")) {
+        }else if(name.startsWith("י")){
+            if(name.contains("א")){
                 return ELEVENTH_GRADE;
-            } else if (name.contains("ב")) {
+            }else if(name.contains("ב")){
                 return TWELVETH_GRADE;
             }
             return TENTH_GRADE;
-        } else {
+        }else{
             return UNKNOWN_GRADE;
         }
     }

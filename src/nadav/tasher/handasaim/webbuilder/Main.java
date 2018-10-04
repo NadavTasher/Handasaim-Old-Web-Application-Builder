@@ -38,8 +38,7 @@ public class Main {
     public static final double webVersion = 0.3;
     private static final String schedulePage = "http://handasaim.co.il/2018/08/31/%D7%9E%D7%A2%D7%A8%D7%9B%D7%AA-%D7%95%D7%A9%D7%99%D7%A0%D7%95%D7%99%D7%99%D7%9D-2/";
     private static final String homePage = "http://handasaim.co.il/";
-    private static final String sourceHTML = "/nadav/tasher/handasaim/webbuilder/resources/index.html";
-    private static final String sourceResources = "/nadav/tasher/handasaim/webbuilder/resources/web_res";
+    private static final String source = "/nadav/tasher/handasaim/webbuilder/resources/";
     private static final File scheduleFileXLSX = new File(System.getProperty("user.dir"), "schedule.xlsx");
     private static final File scheduleFileXLS = new File(System.getProperty("user.dir"), "schedule.xls");
     private static JSONObject result = new JSONObject();
@@ -100,10 +99,14 @@ public class Main {
                             result.put("success_index", false);
                         }
                         try {
-                            copyResources(new File(outputFolder, "web_res"));
+                            copyResources(new File(outputFolder));
                             result.put("success_resources", true);
                         } catch (Exception e) {
                             result.put("success_resources", false);
+                        }
+                        try {
+//                            createSchedule():
+                        } catch (Exception e) {
                         }
                     }
                     result.put("schedule_is_null", schedule == null);
@@ -179,13 +182,13 @@ public class Main {
                     if (e == null)
                         break;
                     String name = e.getName();
-                    if (name.contains(sourceResources.substring(1))) {
+                    if (name.contains(source.substring(1))) {
                         String fileName = name.split("/")[name.split("/").length - 1];
                         extractFile(name, new File(output, fileName));
                     }
                 }
             } else {
-                for (File f : Objects.requireNonNull(new File(Main.class.getResource(sourceResources).toURI()).listFiles())) {
+                for (File f : Objects.requireNonNull(new File(Main.class.getResource(source).toURI()).listFiles())) {
                     Files.copy(new FileInputStream(f), new File(output, f.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING);
                 }
             }
