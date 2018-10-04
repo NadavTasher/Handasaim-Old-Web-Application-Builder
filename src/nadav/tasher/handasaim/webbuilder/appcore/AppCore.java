@@ -1,30 +1,21 @@
-package nadav.tasher.handasaim.architecture.appcore;
+package nadav.tasher.handasaim.webbuilder.appcore;
 
-import org.apache.poi.hssf.usermodel.HSSFPatriarch;
-import org.apache.poi.hssf.usermodel.HSSFRichTextString;
-import org.apache.poi.hssf.usermodel.HSSFShape;
-import org.apache.poi.hssf.usermodel.HSSFTextbox;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import nadav.tasher.handasaim.webbuilder.appcore.components.Classroom;
+import nadav.tasher.handasaim.webbuilder.appcore.components.Schedule;
+import nadav.tasher.handasaim.webbuilder.appcore.components.School;
+import nadav.tasher.handasaim.webbuilder.appcore.components.Subject;
+import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFDrawing;
-import org.apache.poi.xssf.usermodel.XSSFShape;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFSimpleShape;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xssf.usermodel.*;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
-
-import nadav.tasher.handasaim.architecture.appcore.components.Classroom;
-import nadav.tasher.handasaim.architecture.appcore.components.Schedule;
-import nadav.tasher.handasaim.architecture.appcore.components.School;
-import nadav.tasher.handasaim.architecture.appcore.components.Subject;
 
 public class AppCore {
 

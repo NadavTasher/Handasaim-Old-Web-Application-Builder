@@ -1,12 +1,12 @@
-package nadav.tasher.handasaim.architecture.appcore.components;
+package nadav.tasher.handasaim.webbuilder.appcore.components;
 
+import nadav.tasher.handasaim.webbuilder.appcore.AppCore;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import nadav.tasher.handasaim.architecture.appcore.AppCore;
 
 public class Schedule {
 
@@ -98,7 +98,7 @@ public class Schedule {
                     for (Teacher t : s.getTeachers()) {
                         teacherNamesJSON.put(t.getName());
                     }
-                    subjectJSON.put(PARAMETER_TEACHERS, teachers);
+                    subjectJSON.put(PARAMETER_TEACHERS, teacherNamesJSON);
                     subjectsJSON.put(subjectJSON);
                 }
                 classroomJSON.put(PARAMETER_SUBJECTS, subjectsJSON);

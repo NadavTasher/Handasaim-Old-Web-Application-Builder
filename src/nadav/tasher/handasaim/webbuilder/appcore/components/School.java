@@ -1,4 +1,4 @@
-package nadav.tasher.handasaim.architecture.appcore.components;
+package nadav.tasher.handasaim.webbuilder.appcore.components;
 
 public class School {
     private int[] startTimes;
