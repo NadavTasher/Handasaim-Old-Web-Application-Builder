@@ -14,7 +14,6 @@ import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.security.CodeSource;
-import java.util.Objects;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -43,13 +42,12 @@ public class Main {
             File outputFolder = new File(args[0]);
             if (outputFolder.exists()) {
                 if (outputFolder.isDirectory()) {
-                    String currentLink = getScheduleLink();
-                    Schedule schedule = downloadSchedule(currentLink);
-                    if (schedule != null) {
+                    try {
+                        copyResources(outputFolder);
+                        result.put("success_resources", true);
                         try {
-                            copyResources(outputFolder);
-                            result.put("success_resources", true);
-                            try {
+                            Schedule schedule = getSchedule(getScheduleLink());
+                            if (schedule != null) {
                                 JSONObject injectableJSON = schedule.toJSON();
                                 String javascript = "var schedule = " + injectableJSON.toString();
                                 File javascriptOutput = new File(new File(outputFolder, "javascript"), "schedule.js");
@@ -58,17 +56,16 @@ public class Main {
                                 fileWriter.write(javascript);
                                 fileWriter.flush();
                                 fileWriter.close();
-                                result.put("success_schedule", true);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                                result.put("success_schedule", false);
                             }
-                        } catch (Exception e) {
+                            result.put("success_schedule", schedule != null);
+                        } catch (IOException e) {
                             e.printStackTrace();
-                            result.put("success_resources", false);
+                            result.put("success_schedule", false);
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        result.put("success_resources", false);
                     }
-                    result.put("schedule_is_null", schedule == null);
                 }
                 result.put("is_directory", outputFolder.isDirectory());
             }
@@ -89,7 +86,7 @@ public class Main {
         return sb.toString();
     }
 
-    private static Schedule downloadSchedule(String link) {
+    private static Schedule getSchedule(String link) {
         try {
             URL website = new URL(link);
             ReadableByteChannel rbc = Channels.newChannel(website.openStream());
@@ -129,30 +126,64 @@ public class Main {
 
     private static void copyResources(File output) throws Exception {
         if (!output.exists()) {
-            output.mkdirs();
+            Files.createDirectories(output.toPath());
         }
         CodeSource src = Main.class.getProtectionDomain().getCodeSource();
         if (src != null) {
             URL jar = src.getLocation();
             if (jar.toString().endsWith(".jar")) {
                 ZipInputStream zip = new ZipInputStream(jar.openStream());
-                while (true) {
-                    ZipEntry e = zip.getNextEntry();
-                    if (e == null)
-                        break;
+                ZipEntry e;
+                while ((e = zip.getNextEntry()) != null) {
                     String name = e.getName();
                     if (name.contains(source.substring(1))) {
-                        String fileName = name.split("/")[name.split("/").length - 1];
-                        extractFile(name, new File(output, fileName));
+                        String[] split = name.split("/");
+                        String fileName = split[split.length - 1];
+                        copyJAR(name, new File(output, fileName));
                     }
                 }
             } else {
-                for (File f : Objects.requireNonNull(new File(Main.class.getResource(source).toURI()).listFiles())) {
-                    Files.copy(new FileInputStream(f), new File(output, f.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING);
-                }
+                copyIDE(new File(Main.class.getResource(source).toURI()), output);
             }
         } else {
             throw new Exception("Failed To Copy Resources");
+        }
+    }
+
+    private static void copyJAR(String input, File output) throws Exception {
+        File file = new File(Main.class.getClassLoader().getResource(input).toURI());
+        if (file.isDirectory()) {
+            File[] files = file.listFiles();
+            if (files != null) {
+                System.out.println(files[0].toString());
+            }
+        }
+        if (input.endsWith("/")) {
+        } else {
+            FileOutputStream out = new FileOutputStream(output);
+            ClassLoader cl = Main.class.getClassLoader();
+            InputStream in = cl.getResourceAsStream(input);
+            byte[] buf = new byte[8 * 1024];
+            int len;
+            while ((len = in.read(buf)) != -1) {
+                out.write(buf, 0, len);
+            }
+            out.close();
+            in.close();
+        }
+    }
+
+    private static void copyIDE(File file, File output) throws IOException {
+        if (file.isFile()) {
+            Files.copy(file.toPath(), output.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        } else {
+            File[] list = file.listFiles();
+            Files.createDirectories(output.toPath());
+            if (list != null) {
+                for (File f : list) {
+                    copyIDE(f, new File(output, f.getName()));
+                }
+            }
         }
     }
 
