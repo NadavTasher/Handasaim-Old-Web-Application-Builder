@@ -49,7 +49,7 @@ public class Main {
                             Schedule schedule = getSchedule(getScheduleLink());
                             if (schedule != null) {
                                 JSONObject injectableJSON = schedule.toJSON();
-                                String javascript = "var schedule = " + injectableJSON.toString();
+                                String javascript = "var schedule = " + injectableJSON.toString() + ";";
                                 File javascriptOutput = new File(new File(outputFolder, "javascript"), "schedule.js");
                                 javascriptOutput.createNewFile();
                                 FileWriter fileWriter = new FileWriter(javascriptOutput);
@@ -73,17 +73,6 @@ public class Main {
         }
         result.put("enough_args", args.length > 0);
         System.out.println(result.toString());
-    }
-
-    private static String read(InputStream is) throws IOException {
-        BufferedReader buf = new BufferedReader(new InputStreamReader(is));
-        String line = buf.readLine();
-        StringBuilder sb = new StringBuilder();
-        while (line != null) {
-            sb.append(line).append("\n");
-            line = buf.readLine();
-        }
-        return sb.toString();
     }
 
     private static Schedule getSchedule(String link) {
@@ -111,19 +100,6 @@ public class Main {
         }
     }
 
-    private static void extractFile(String name, File output) throws IOException {
-        FileOutputStream out = new FileOutputStream(output);
-        ClassLoader cl = Main.class.getClassLoader();
-        InputStream in = cl.getResourceAsStream(name);
-        byte[] buf = new byte[8 * 1024];
-        int len;
-        while ((len = in.read(buf)) != -1) {
-            out.write(buf, 0, len);
-        }
-        out.close();
-        in.close();
-    }
-
     private static void copyResources(File output) throws Exception {
         if (!output.exists()) {
             Files.createDirectories(output.toPath());
@@ -137,8 +113,6 @@ public class Main {
                 while ((e = zip.getNextEntry()) != null) {
                     String name = e.getName();
                     if (name.contains(source.substring(1))) {
-                        String[] split = name.split("/");
-                        String fileName = split[split.length - 1];
                         copyJAR(name, new File(output, name.replaceAll(source.substring(1), "")));
                     }
                 }
