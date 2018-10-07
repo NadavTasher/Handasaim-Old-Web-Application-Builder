@@ -139,7 +139,7 @@ public class Main {
                     if (name.contains(source.substring(1))) {
                         String[] split = name.split("/");
                         String fileName = split[split.length - 1];
-                        copyJAR(name, new File(output, fileName));
+                        copyJAR(name, new File(output, name.replaceAll(source.substring(1), "")));
                     }
                 }
             } else {
@@ -151,24 +151,18 @@ public class Main {
     }
 
     private static void copyJAR(String input, File output) throws Exception {
-        File file = new File(Main.class.getClassLoader().getResource(input).toURI());
-        if (file.isDirectory()) {
-            File[] files = file.listFiles();
-            if (files != null) {
-                System.out.println(files[0].toString());
-            }
-        }
+//        System.out.println(input);
+//        System.out.println("To "+output.toString());
         if (input.endsWith("/")) {
+//            System.out.println("Directory");
+            Files.createDirectories(output.toPath());
         } else {
-            FileOutputStream out = new FileOutputStream(output);
-            ClassLoader cl = Main.class.getClassLoader();
-            InputStream in = cl.getResourceAsStream(input);
-            byte[] buf = new byte[8 * 1024];
-            int len;
-            while ((len = in.read(buf)) != -1) {
-                out.write(buf, 0, len);
-            }
-            out.close();
+//            System.out.println("File");
+            InputStream in = Main.class.getClassLoader().getResourceAsStream(input);
+            if (output.exists())
+                Files.delete(output.toPath());
+            Files.createFile(output.toPath());
+            Files.write(output.toPath(), in.readAllBytes());
             in.close();
         }
     }
