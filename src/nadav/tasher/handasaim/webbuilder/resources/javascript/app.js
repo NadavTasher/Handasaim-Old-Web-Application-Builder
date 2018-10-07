@@ -43,8 +43,8 @@ function setupCornerColor() {
 function setupSwitcher() {
   var switcher = document.getElementById("classroomSwitcher");
   for (var c = 0; c < schedule.classrooms.length; c++) {
-    const name = schedule.classrooms[c].n;
-    var grade = schedule.classrooms[c].g;
+    const name = schedule.classrooms[c].name;
+    var grade = schedule.classrooms[c].grade;
     var element = document.createElement("p");
     element.classList.add("switcherButton");
     element.onclick = function() {
@@ -90,11 +90,11 @@ function parseSchedule() {
   var content = document.getElementById("content");
   for (var c = 0; c < schedule.classrooms.length; c++) {
     var classroomView = document.createElement("div");
-    classroomView.id = schedule.classrooms[c].n;
+    classroomView.id = schedule.classrooms[c].name;
     classroomView.classList.add("classroomSchedule");
-    for (var s = 0; s < schedule.classrooms[c].sjs.length; s++) {
-      var lessonName = schedule.classrooms[c].sjs[s].n;
-      var lessonHour = schedule.classrooms[c].sjs[s].h;
+    for (var s = 0; s < schedule.classrooms[c].subjects.length; s++) {
+      var lessonName = schedule.classrooms[c].subjects[s].name;
+      var lessonHour = schedule.classrooms[c].subjects[s].hour;
       if (lessonName.length > 0) {
         const lessonView = document.createElement("div");
         const top = document.createElement("p");
@@ -111,7 +111,7 @@ function parseSchedule() {
         lessonView.classList.add("lessonView");
 
         for (var t = 0; t < schedule.classrooms[c].sjs[s].ns.length; t++) {
-          var teacher = schedule.classrooms[c].sjs[s].ns[t];
+          var teacher = schedule.classrooms[c].subjects[s].teachers[t];
           var teacherName = document.createElement("p");
           teacherName.classList.add("lessonViewTeacher");
           teacherName.innerHTML = teacher;
@@ -121,7 +121,7 @@ function parseSchedule() {
         // bottomTable.cellSpacing = "10";
 
         top.innerHTML = "\u200F" + lessonHour + ". " + lessonName;
-        time.innerHTML = minuteToTime(schedule.classrooms[c].sjs[s].bm) + " - " + minuteToTime(schedule.classrooms[c].sjs[s].em);
+        time.innerHTML = minuteToTime(schedule.classrooms[c].subjects[s].start_minute) + " - " + minuteToTime(schedule.classrooms[c].subjects[s].end_minute);
 
         hideView(bottom);
         lessonView.onclick = function() {
