@@ -13,7 +13,7 @@ function onPageLoad() {
   setupColors();
   parseSchedule();
   setupSwitcher();
-  setClassroom((getCookie(classCookie) != "" && getCookie(classCookie) != "undefined") ? getCookie(classCookie) : schedule.classrooms[0].n);
+  setClassroom((getCookie(classCookie) != "" && getCookie(classCookie) != "undefined") ? getCookie(classCookie) : schedule.classrooms[0].name);
   showInstallPopup();
 }
 
@@ -110,7 +110,7 @@ function parseSchedule() {
         top.classList.add("lessonViewText");
         lessonView.classList.add("lessonView");
 
-        for (var t = 0; t < schedule.classrooms[c].sjs[s].ns.length; t++) {
+        for (var t = 0; t < schedule.classrooms[c].subjects[s].teachers.length; t++) {
           var teacher = schedule.classrooms[c].subjects[s].teachers[t];
           var teacherName = document.createElement("p");
           teacherName.classList.add("lessonViewTeacher");
