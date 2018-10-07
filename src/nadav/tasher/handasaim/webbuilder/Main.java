@@ -33,6 +33,7 @@ public class Main {
     private static final String schedulePage = "http://handasaim.co.il/2018/08/31/%D7%9E%D7%A2%D7%A8%D7%9B%D7%AA-%D7%95%D7%A9%D7%99%D7%A0%D7%95%D7%99%D7%99%D7%9D-2/";
     private static final String homePage = "http://handasaim.co.il/";
     private static final String source = "/nadav/tasher/handasaim/webbuilder/resources/";
+    private static final String scheduleName = "GitHub Schedule";
     private static final File scheduleFileXLSX = new File(System.getProperty("user.dir"), "schedule.xlsx");
     private static final File scheduleFileXLS = new File(System.getProperty("user.dir"), "schedule.xls");
     private static JSONObject result = new JSONObject();
@@ -91,9 +92,9 @@ public class Main {
             fos.close();
             Schedule schedule;
             if (link.endsWith(".xlsx")) {
-                schedule = AppCore.getSchedule(scheduleFileXLSX);
+                schedule = AppCore.getSchedule(scheduleFileXLSX, scheduleName, "Unknown Date", link);
             } else {
-                schedule = AppCore.getSchedule(scheduleFileXLS);
+                schedule = AppCore.getSchedule(scheduleFileXLS, scheduleName, "Unknown Date", link);
             }
             return schedule;
         } catch (IOException e) {
