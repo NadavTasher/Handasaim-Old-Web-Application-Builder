@@ -49,13 +49,8 @@ public class Main {
                             Schedule schedule = getSchedule(getScheduleLink());
                             if (schedule != null) {
                                 JSONObject injectableJSON = schedule.toJSON();
-                                String javascript = "var schedule = " + injectableJSON.toString() + ";";
-                                File javascriptOutput = new File(new File(outputFolder, "javascript"), "schedule.js");
-                                javascriptOutput.createNewFile();
-                                FileWriter fileWriter = new FileWriter(javascriptOutput);
-                                fileWriter.write(javascript);
-                                fileWriter.flush();
-                                fileWriter.close();
+                                write(new File(new File(outputFolder, "javascript"), "schedule.js"), ("var schedule = " + injectableJSON.toString() + ";"));
+                                write(new File(new File(outputFolder, "files"), "schedule.json"), (injectableJSON.toString()));
                             }
                             result.put("success_schedule", schedule != null);
                         } catch (IOException e) {
@@ -73,6 +68,13 @@ public class Main {
         }
         result.put("enough_args", args.length > 0);
         System.out.println(result.toString());
+    }
+
+    private static void write(File file, String contents) throws IOException {
+        FileWriter fileWriter = new FileWriter(file);
+        fileWriter.write(contents);
+        fileWriter.flush();
+        fileWriter.close();
     }
 
     private static Schedule getSchedule(String link) {
