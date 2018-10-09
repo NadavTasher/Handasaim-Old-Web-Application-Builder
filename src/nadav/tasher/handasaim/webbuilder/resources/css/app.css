@@ -20,6 +20,7 @@
   width: fill-available;
   width: -webkit-fill-available;
   table-layout: fixed;
+  padding: 8% 4%;
 }
 
 .lessonViewBottom{
