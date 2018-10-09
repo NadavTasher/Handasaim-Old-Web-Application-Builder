@@ -11,31 +11,41 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.*;
+import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class AppCore {
-
-    public static double APPCORE_VERSION = 1.9;
+    public static double APPCORE_VERSION = 2.0;
 
     /*
         Note That XSSF Resemmbles XLSX,
         While HSSF Resembles XLS.
         XSSF Is The Newer Format.
 
-        Since 1.8, AppCore is ONLY for essentials (e.g. reading excel, returning a school)
+        Since 1.8, AppCore is ONLY for essentials (e.g. reading excel, returning a school, fetching a link)
      */
 
-    private static int startReadingRow(Sheet s) {
-        Cell secondCell = s.getRow(0).getCell(1);
+    private static int getReadingRow(Sheet sheet) {
+        Cell secondCell = sheet.getRow(0).getCell(1);
         if (!readCell(secondCell).isEmpty()) {
             return 0;
         } else {
             return 1;
         }
+    }
+
+    private static int getReadingColumn(Sheet sheet) {
+        return 1;
     }
 
     private static void parseMessages(Schedule.Builder builder, Sheet sheet) {
@@ -133,18 +143,24 @@ public class AppCore {
 
     private static void parseClassrooms(Schedule.Builder builder, Sheet sheet) {
         try {
-            int startReadingRow = startReadingRow(sheet);
+            int readingRow = getReadingRow(sheet);
+            int readingColumn = getReadingColumn(sheet);
             int rows = sheet.getLastRowNum();
-            int cols = sheet.getRow(startReadingRow).getLastCellNum();
-            for (int c = 1; c < cols; c++) {
-                String name = readCell(sheet.getRow(startReadingRow).getCell(c)).split(" ")[0];
-                Classroom classroom = new Classroom(name);
-                int readStart = startReadingRow + 1;
-                for (int r = readStart; r < rows; r++) {
+            int columns = sheet.getRow(readingRow).getLastCellNum();
+            for (int c = readingColumn; c < columns; c++) {
+                Classroom.Builder classroom = new Classroom.Builder();
+                classroom.setName(readCell(sheet.getRow(readingRow).getCell(c)).split(" ")[0]);
+                int startRow = readingRow + 1;
+                for (int r = startRow; r < rows; r++) {
                     Row row = sheet.getRow(r);
                     String description = readCell(row.getCell(c));
-                    if (!description.isEmpty())
-                        classroom.addSubject(new Subject(classroom, r - readStart, description));
+                    if (!description.isEmpty()) {
+                        Subject.Builder subject = new Subject.Builder();
+                        subject.setName(description.split("\\r?\\n")[0].replaceAll(",", "/"));
+                        subject.setNames(new ArrayList<>(Arrays.asList(description.substring(description.indexOf("\n") + 1).trim().split("\\r?\\n")[0].split(","))));
+                        subject.setHour(r - startRow);
+                        classroom.addSubject(subject);
+                    }
                 }
                 builder.addClassroom(classroom);
             }
@@ -157,8 +173,18 @@ public class AppCore {
         return readCell(s.getRow(0).getCell(0));
     }
 
-    public static Schedule getSchedule(File excel) {
-        Schedule.Builder mBuilder = new Schedule.Builder(Schedule.TYPE_REGULAR);
+    public static Schedule getSchedule(File anyfile) {
+        if (anyfile.getName().endsWith(".xlsx") || anyfile.getName().endsWith(".xls")) {
+            return getScheduleFromExcel(anyfile);
+        } else if (anyfile.getName().endsWith(".json")) {
+            // TODO read file
+            return Schedule.Builder.fromJSON(new JSONObject()).build();
+        }
+        return new Schedule.Builder().build();
+    }
+
+    private static Schedule getScheduleFromExcel(File excel) {
+        Schedule.Builder mBuilder = new Schedule.Builder();
         Sheet sheet = getSheet(excel);
         if (sheet != null) {
             parseClassrooms(mBuilder, sheet);
@@ -168,12 +194,53 @@ public class AppCore {
         return mBuilder.build();
     }
 
-    public static Schedule getSchedule(File excel, String name, String date, String origin) {
-        Schedule.Builder builder = Schedule.Builder.fromSchedule(getSchedule(excel));
+    public static Schedule getSchedule(File anyfile, String name, String date, String origin) {
+        Schedule.Builder builder = Schedule.Builder.fromSchedule(getSchedule(anyfile));
         builder.setName(name);
         builder.setOrigin(origin);
         builder.setDate(date);
         return builder.build();
+    }
+
+    public static String getLink(String schedulePage, String homePage, String githubFallback) {
+        String file = null;
+        if (file == null) {
+            try {
+                // Main Search At Schedule Page
+                Document document = Jsoup.connect(schedulePage).get();
+                Elements elements = document.select("a");
+                for (int i = 0; (i < elements.size() && file == null); i++) {
+                    String attribute = elements.get(i).attr("href");
+                    if (attribute.endsWith(".xls") || attribute.endsWith(".xlsx")) {
+                        file = attribute;
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        if (file == null) {
+            try {
+                // Fallback Search At Home Page
+                Document documentFallback = Jsoup.connect(homePage).get();
+                Elements elementsFallback = documentFallback.select("a");
+                for (int i = 0; (i < elementsFallback.size() && file == null); i++) {
+                    String attribute = elementsFallback.get(i).attr("href");
+                    //                    Log.i("LinkFallback",attribute);
+                    if ((attribute.endsWith(".xls") || attribute.endsWith(".xlsx")) && Pattern.compile("(/.[^a-z]+\\..+)$").matcher(attribute).find()) {
+                        file = attribute;
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        // GitHub Fallback
+        if (file == null) {
+            file = githubFallback;
+        }
+        // Return Link
+        return file;
     }
 
     public static School getSchool() {

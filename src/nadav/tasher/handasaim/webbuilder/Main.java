@@ -3,9 +3,6 @@ package nadav.tasher.handasaim.webbuilder;
 import nadav.tasher.handasaim.webbuilder.appcore.AppCore;
 import nadav.tasher.handasaim.webbuilder.appcore.components.Schedule;
 import org.json.JSONObject;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 
 import java.io.*;
 import java.net.URL;
@@ -14,22 +11,10 @@ import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.security.CodeSource;
-import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 public class Main {
-    /*
-        Shortcuts:
-        n = name
-        ns = names
-        sjs = subjects
-        h = hour
-        bm = beginning minute
-        em = ending minute
-        d = description
-        g = grade
-     */
     private static final String schedulePage = "http://handasaim.co.il/2018/08/31/%D7%9E%D7%A2%D7%A8%D7%9B%D7%AA-%D7%95%D7%A9%D7%99%D7%A0%D7%95%D7%99%D7%99%D7%9D-2/";
     private static final String homePage = "http://handasaim.co.il/";
     private static final String source = "/nadav/tasher/handasaim/webbuilder/resources/";
@@ -128,13 +113,9 @@ public class Main {
     }
 
     private static void copyJAR(String input, File output) throws Exception {
-//        System.out.println(input);
-//        System.out.println("To "+output.toString());
         if (input.endsWith("/")) {
-//            System.out.println("Directory");
             Files.createDirectories(output.toPath());
         } else {
-//            System.out.println("File");
             InputStream in = Main.class.getClassLoader().getResourceAsStream(input);
             if (output.exists())
                 Files.delete(output.toPath());
@@ -159,32 +140,7 @@ public class Main {
     }
 
     private static String getScheduleLink() {
-        String file = null;
-        try {
-            // Main Search At Schedule Page
-            Document document = Jsoup.connect(schedulePage).get();
-            Elements elements = document.select("a");
-            for (int i = 0; (i < elements.size() && file == null); i++) {
-                String attribute = elements.get(i).attr("href");
-                if (attribute.endsWith(".xls") || attribute.endsWith(".xlsx")) {
-                    file = attribute;
-                }
-            }
-            // Fallback Search At Home Page
-            if (file == null) {
-                Document documentFallback = Jsoup.connect(homePage).get();
-                Elements elementsFallback = documentFallback.select("a");
-                for (int i = 0; (i < elementsFallback.size() && file == null); i++) {
-                    String attribute = elementsFallback.get(i).attr("href");
-                    if ((attribute.endsWith(".xls") || attribute.endsWith(".xlsx")) && Pattern.compile("(/.[^a-z]+\\..+)$").matcher(attribute).find()) {
-                        file = attribute;
-                    }
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return file;
+        return AppCore.getLink(schedulePage, homePage, null);
     }
 
     private static String basicSearch(String s) {
