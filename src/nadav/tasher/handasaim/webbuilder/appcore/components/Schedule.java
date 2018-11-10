@@ -6,25 +6,24 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class Schedule {
+    static final String PARAMETER_NAME = "name";
+    static final String PARAMETER_DAY = "day";
+    static final String PARAMETER_ORIGIN = "origin";
+    static final String PARAMETER_MESSAGES = "messages";
+    static final String PARAMETER_GRADE = "grade";
+    static final String PARAMETER_CLASSROOMS = "classrooms";
+    static final String PARAMETER_SUBJECTS = "subjects";
+    static final String PARAMETER_HOUR = "hour";
+    static final String PARAMETER_START_TIME = "start_minute";
+    static final String PARAMETER_END_TIME = "end_minute";
+    static final String PARAMETER_TEACHERS = "teachers";
 
-    public static final String PARAMETER_NAME = "name";
-    public static final String PARAMETER_DAY = "day";
-    public static final String PARAMETER_DATE = "date";
-    public static final String PARAMETER_ORIGIN = "origin";
-    public static final String PARAMETER_MESSAGES = "messages";
-    public static final String PARAMETER_GRADE = "grade";
-    public static final String PARAMETER_CLASSROOMS = "classrooms";
-    public static final String PARAMETER_SUBJECTS = "subjects";
-    public static final String PARAMETER_HOUR = "hour";
-    public static final String PARAMETER_START_TIME = "start_minute";
-    public static final String PARAMETER_END_TIME = "end_minute";
-    public static final String PARAMETER_TEACHERS = "teachers";
     private ArrayList<Classroom> classrooms = new ArrayList<>();
     private ArrayList<Teacher> teachers = new ArrayList<>();
     private ArrayList<String> messages = new ArrayList<>();
-    private String name = "Generic Schedule", date = "Unknown Date", origin = "Unknown Origin", day = "?";
+    private String name = "Generic Schedule", origin = "Unknown Origin", day = "?";
 
-    private Schedule() {
+    public Schedule() {
     }
 
     public String getName() {
@@ -33,14 +32,6 @@ public class Schedule {
 
     private void setName(String name) {
         this.name = name;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    private void setDate(String date) {
-        this.date = date;
     }
 
     public String getDay() {
@@ -55,12 +46,12 @@ public class Schedule {
         return origin;
     }
 
-    private void removeAllTeachers() {
-        teachers.clear();
-    }
-
     private void setOrigin(String origin) {
         this.origin = origin;
+    }
+
+    private void removeAllTeachers() {
+        teachers.clear();
     }
 
     public ArrayList<Teacher> getTeachers() {
@@ -92,7 +83,6 @@ public class Schedule {
         try {
             scheduleJSON.put(PARAMETER_DAY, day);
             scheduleJSON.put(PARAMETER_NAME, name);
-            scheduleJSON.put(PARAMETER_DATE, date);
             scheduleJSON.put(PARAMETER_ORIGIN, origin);
             JSONArray messagesJSON = new JSONArray();
             for (String m : messages) {
@@ -129,7 +119,6 @@ public class Schedule {
             try {
                 String day = object.getString(PARAMETER_DAY);
                 String origin = object.getString(PARAMETER_ORIGIN);
-                String date = object.getString(PARAMETER_DATE);
                 String name = object.getString(PARAMETER_NAME);
                 JSONArray messages = object.getJSONArray(PARAMETER_MESSAGES);
                 JSONArray classrooms = object.getJSONArray(PARAMETER_CLASSROOMS);
@@ -137,9 +126,8 @@ public class Schedule {
                     builder.addMessage(messages.getString(m));
                 }
                 for (int c = 0; c < classrooms.length(); c++) {
-                    builder.addClassroom(Classroom.Builder.fromJSON(classrooms.getJSONObject(c)));
+                    builder.addClassroom(Classroom.fromJSON(classrooms.getJSONObject(c)));
                 }
-                builder.setDate(date);
                 builder.setOrigin(origin);
                 builder.setDay(day);
                 builder.setName(name);
@@ -149,67 +137,73 @@ public class Schedule {
             return builder;
         }
 
-        public void addMessage(String message) {
+        public Builder addMessage(String message) {
             schedule.addMessage(message);
+            return this;
         }
 
-        public void addClassroom(Classroom.Builder classroom) {
-            schedule.addClassroom(classroom.build());
+        public Builder addClassroom(Classroom classroom) {
+            schedule.addClassroom(classroom);
+            return this;
+
         }
 
-        public void setName(String name) {
+        public Builder setName(String name) {
             schedule.setName(name);
+            return this;
+
         }
 
-        public void setDate(String date) {
-            schedule.setDate(date);
-        }
-
-        public void setOrigin(String origin) {
+        public Builder setOrigin(String origin) {
             schedule.setOrigin(origin);
+            return this;
+
         }
 
-        public void setDay(String day) {
+        public Builder setDay(String day) {
             schedule.setDay(day);
+            return this;
+
         }
 
         private void assembleTeachers() {
-            ArrayList<Teacher.Builder> allTeachers = new ArrayList<>();
+            ArrayList<Teacher> allTeachers = new ArrayList<>();
             for (Classroom c : schedule.getClassrooms()) {
                 for (Subject s : c.getSubjects()) {
-                    Subject.Builder builder = Subject.Builder.fromSubject(s);
-                    ArrayList<Teacher> currentTeachers = builder.getTeachers();
-                    ArrayList<Teacher.Builder> newTeachers = new ArrayList<>();
-                    for (int currentIndex = 0; currentIndex < currentTeachers.size(); currentIndex++) {
-                        Teacher currentTeacher = currentTeachers.get(currentIndex);
-                        boolean found = false;
-                        for (int allIndex = 0; allIndex < allTeachers.size() && !found; allIndex++) {
-                            Teacher.Builder teacherBuilder = allTeachers.get(allIndex);
-                            if (teacherBuilder.getName().contains(currentTeacher.getName()) || currentTeacher.getName().contains(teacherBuilder.getName())) {
-                                // Merge
-                                teacherBuilder.addSubject(builder);
-                                teacherBuilder.setName(currentTeacher.getName());
-                                newTeachers.add(teacherBuilder);
-                                found = true;
+                    ArrayList<Teacher> newTeachers = new ArrayList<>();
+                    for (Teacher currentTeacher : s.getTeachers()) {
+                        if (!currentTeacher.getName().isEmpty()) {
+                            boolean found = false;
+                            for (Teacher teacher : allTeachers) {
+                                if (teacher.getName().contains(currentTeacher.getName()) || currentTeacher.getName().contains(teacher.getName())) {
+                                    if (teacher != currentTeacher) {
+                                        // Merge
+                                        teacher.addSubject(s);
+                                        teacher.setName(currentTeacher.getName());
+                                    }
+                                    newTeachers.add(teacher);
+                                    found = true;
+                                    break;
+                                }
                             }
-                        }
-                        if (!found) {
-                            // Create new teacher
-                            Teacher.Builder teacherBuilder = new Teacher.Builder();
-                            teacherBuilder.setName(currentTeacher.getName());
-                            teacherBuilder.addSubject(builder);
-                            allTeachers.add(teacherBuilder);
+                            if (!found) {
+                                // Create new teacher
+                                Teacher teacher = new Teacher();
+                                teacher.setName(currentTeacher.getName());
+                                teacher.addSubject(s);
+                                newTeachers.add(teacher);
+                                allTeachers.add(teacher);
+                            }
                         }
                     }
                     if (newTeachers.size() > 0) {
-                        builder.removeAllTeachers();
-                        for (Teacher.Builder teacher : newTeachers) builder.addTeacher(teacher);
+                        s.removeAllTeachers();
+                        for (Teacher teacher : newTeachers) s.addTeacher(teacher);
                     }
                 }
             }
             schedule.removeAllTeachers();
-            for (Teacher.Builder teacherBuilder : allTeachers)
-                schedule.addTeacher(teacherBuilder.build());
+            for (Teacher teacher : allTeachers) schedule.addTeacher(teacher);
         }
 
         public Schedule build() {

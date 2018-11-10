@@ -77,10 +77,11 @@ public class Main {
             fos.close();
             Schedule schedule;
             if (link.endsWith(".xlsx")) {
-                schedule = AppCore.getSchedule(scheduleFileXLSX, scheduleName, "Unknown Date", link);
+                schedule = AppCore.getSchedule(scheduleFileXLSX, link);
             } else {
-                schedule = AppCore.getSchedule(scheduleFileXLS, scheduleName, "Unknown Date", link);
+                schedule = AppCore.getSchedule(scheduleFileXLS, link);
             }
+            schedule = Schedule.Builder.fromSchedule(schedule).setName(scheduleName).build();
             return schedule;
         } catch (IOException e) {
             e.printStackTrace();

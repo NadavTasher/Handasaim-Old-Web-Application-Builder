@@ -11,43 +11,62 @@
     <link rel="icon" href="icons/icon.png"/>
     <link rel="stylesheet" href="css/app.css">
     <script type="text/javascript" src="javascript/schedule.js"></script>
-    <script type="text/javascript" src="javascript/app.js"></script>
+    <script type="text/javascript" src="javascript/app/utils.js"></script>
+    <script type="text/javascript" src="javascript/app/core.js"></script>
+    <script type="text/javascript" src="javascript/app/gui.js"></script>
+    <script type="text/javascript" src="javascript/app/app.js"></script>
     <title>H+</title>
 </head>
 
 <body onload="onPageLoad()">
 <center>
-    <div id="topBar">
+    <div id="top">
         <div id="menuIcons">
             <img src="icons/class.svg" class="topBarIcon" onclick="toggleSwitcher()"/>
             <img src="icons/icon.svg" class="topBarIcon" onclick="toggleAbout()"/>
             <img src="icons/refresh.svg" class="topBarIcon" onclick="refresh()"/>
         </div>
-        <div id="classroomSwitcher" class="hiddenView">
-        </div>
-        <div id="aboutView" class="hiddenView">
-            <p>
-                <b>Handasaim+ Web</b><br/>
-                <i>Made by Nadav Tasher</i><br/>
-                <i>Version 0.5</i><br/>
-                <a id="installApp" href="files/handasaim.mobileconfig">Install App</a>
-            </p>
+        <div id="topContent">
+            <div id="about" class="hiddenView">
+                <p>
+                    <b>Handasaim+ Web</b><br/>
+                    <i>Made by Nadav Tasher</i><br/>
+                    <i>Version 0.6</i><br/>
+                    <a id="installApp" href="files/handasaim.mobileconfig">Install App</a>
+                </p>
+            </div>
+            <table id="switcher" class="hiddenView">
+                <tr id="9th">
+                </tr>
+                <tr id="10th">
+                </tr>
+                <tr id="11th">
+                </tr>
+                <tr id="12th">
+                </tr>
+            </table>
         </div>
     </div>
     <div id="content">
-        <div id="popupInstall" class="hiddenView">
-            <p id="installText">
-                <b>Install On Your iPhone®</b>
-            </p>
-            <p id="installYeah" onclick="installApp()" class="button">Install</p>
-            <p id="installNah" onclick="doneInstall()" class="button">I'll Skip.</p>
+        <div id="junk">
+            <div id="popupInstall" class="hiddenView">
+                <p id="installText">
+                    <b>Install On Your iPhone®</b>
+                </p>
+                <p id="installYeah" onclick="installApp()" class="button">Install</p>
+                <p id="installNah" onclick="doneInstall()" class="button">I'll Skip.</p>
+            </div>
         </div>
+        <div id="messageView">
+            <p id="message"></p>
+        </div>
+        <div id="schedule"></div>
     </div>
-    <div id="bottomBar">
-        <div id="corner" onclick="toggleMenu()">
+    <div id="bottom">
+        <div id="corner" onclick="toggleTop()">
             <div id="cornerContent">
-                <p id="cornerTop"/>
-                <p id="cornerBottom"/>
+                <p id="cornerTop"></p>
+                <p id="cornerBottom"></p>
             </div>
         </div>
     </div>

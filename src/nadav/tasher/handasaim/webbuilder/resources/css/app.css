@@ -1,3 +1,13 @@
+#messageView {
+  background-color: #333;
+  border-radius: 10px;
+  width: inherit;
+}
+
+#message {
+  padding: 4%
+}
+
 .lessonView {
   background-color: #333;
   border-radius: 10px;
@@ -20,7 +30,7 @@
   width: fill-available;
   width: -webkit-fill-available;
   table-layout: fixed;
-  padding: 8% 4%;
+  padding: 0 2% 2% 2%;
 }
 
 .lessonViewBottom{
@@ -51,7 +61,8 @@
 .lessonViewText {
   font-size: 150%;
   text-align: right;
-  padding: 8% 4%;
+  direction: rtl;
+  padding: 6%;
 }
 
 .hiddenView {
@@ -75,7 +86,7 @@
   font-size: 150%;
   text-align: center;
   border-radius: 1vh;
-  padding: 4% 4%;
+  padding: 4%;
 }
 
 .button {
@@ -85,8 +96,12 @@
   display: table-cell;
   min-height: 8vh;
   height: 8vh;
-  padding: 5%;
+  padding: 1%;
   width: 30vw;
+}
+
+#schedule {
+
 }
 
 #aboutView {
@@ -94,23 +109,16 @@
   padding: 4vh;
 }
 
-#cornerTop {
-  font-size: 140%;
-}
-
-#cornerBottom {
-  font-size: 140%;
-
-}
-
-#topBar {
+#top {
   vertical-align: top;
   border-radius: 10px;
   height: auto;
-  width: inherit;
+  width: 96vw;
+  position: fixed;
+  top: 2vw;
 }
 
-#bottomBar {
+#bottom {
   position: absolute;
   vertical-align: bottom;
   height: auto;
@@ -162,7 +170,7 @@
   background-color: #888888a0;
   border-radius: 10px;
   min-height: 14vh;
-  padding: 3vh;
+  padding: 1vh;
   margin: 1vh 0 0 0;
   width: inherit;
 }
@@ -197,10 +205,12 @@ body {
 }
 
 p,
-a {
+a,
+i {
   font-family: Arial, ArialHebrew, sans-serif;
   color: #FFF;
   vertical-align: middle;
   text-align: center;
+  font-size: larger;
   margin: 1vh;
 }
