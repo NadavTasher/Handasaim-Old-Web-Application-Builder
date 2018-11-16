@@ -1,5 +1,5 @@
 let switcher, topView, bottomView, topContent, about, corner, message, cornerTop, cornerBottom,
-    scheduleHolder;
+    scheduleHolder, messageView;
 const
     topBarColor = "#000000",
     topColor = "#00827E",
@@ -15,6 +15,7 @@ function presetup() {
         message = document.getElementById("message"),
         cornerTop = document.getElementById("cornerTop"),
         cornerBottom = document.getElementById("cornerBottom"),
+        messageView = document.getElementById("messageView"),
         scheduleHolder = document.getElementById("schedule");
 }
 
@@ -35,10 +36,9 @@ function setupBackground() {
 }
 
 function setupSwitcher() {
-    switcher.add;
     for (let c = 0; c < schedule.classrooms.length; c++) {
         const grade = schedule.classrooms[c].grade;
-        const element = document.createElement("p");
+        const element = document.createElement("div");
         element.classList.add("switcherButton");
         element.onclick = function () {
             setClassroom(schedule.classrooms[c].name);
@@ -46,13 +46,18 @@ function setupSwitcher() {
             hide(topView);
         };
         element.innerHTML = schedule.classrooms[c].name;
-        switcher.appendChild(element);
+        document.getElementById(grade + "th").appendChild(element);
     }
 }
 
 function setupMessages() {
-    nextMessage();
-    setupTimer();
+    if (schedule.messages.length > 0) {
+        show(messageView);
+        nextMessage();
+        setupTimer();
+    } else {
+        hide(messageView);
+    }
 }
 
 function setupTheme() {
@@ -120,17 +125,10 @@ function addSubject(holder, subject) {
         let bottom = document.createElement("table");
         let time = document.createElement("p");
         let teachers = document.createElement("div");
-
-        bottom.classList.add("lessonViewBottom");
-        // bottomTable.classList.add("lessonViewBottomTable");
-        teachers.classList.add("lessonViewTeachers");
-        time.classList.add("lessonViewTime");
-        top.classList.add("lessonViewText");
         lessonView.classList.add("lessonView");
 
         for (let t = 0; t < subject.teachers.length; t++) {
             let teacher = document.createElement("p");
-            teacher.classList.add("lessonViewTeacher");
             teacher.innerHTML = subject.teachers[t];
             teachers.appendChild(teacher);
         }
@@ -146,9 +144,8 @@ function addSubject(holder, subject) {
                 hide(bottom);
             }
         };
-
-        bottom.appendChild(time);
         bottom.appendChild(teachers);
+        bottom.appendChild(time);
         lessonView.appendChild(top);
         lessonView.appendChild(bottom);
         holder.appendChild(lessonView);

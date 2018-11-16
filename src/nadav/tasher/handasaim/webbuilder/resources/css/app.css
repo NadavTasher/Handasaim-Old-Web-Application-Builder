@@ -1,103 +1,90 @@
-#messageView {
-  background-color: #333;
-  border-radius: 10px;
-  width: inherit;
-}
-
-#message {
-  padding: 4%
-}
-
 .lessonView {
-  background-color: #333;
-  border-radius: 10px;
-  width: inherit;
+    background-color: #333;
+    border-radius: 10px;
+    width: inherit;
 }
 
-.lessonViewTime {
-  font-size: 150%;
-  text-align: center;
-  vertical-align: middle;
-  /* padding: 2% 4%; */
-  font-style: italic;
-  flex: 1 1;
-  white-space: pre;
-  display: table-cell;
-
+.lessonView * {
+    font-size: x-large;
+    text-align: right;
+    direction: rtl;
+    padding: 2vh;
 }
 
-.lessonViewBottomTable{
-  width: fill-available;
-  width: -webkit-fill-available;
-  table-layout: fixed;
-  padding: 0 2% 2% 2%;
+.lessonView * * {
+    font-size: x-large;
+    margin: auto;
+    padding: 0;
 }
 
-.lessonViewBottom{
-  padding: 0 2%;
-  margin: 0;
-  display: -webkit-box;
-  display: -moz-box;
-  display: -ms-flexbox;
-  display: -webkit-flex;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.lessonViewTeacher {
-  font-size: 150%;
-  text-align: center;
-  /* padding: 2% 4%; */
-  font-style: italic;
-  white-space: pre;
-}
-
-.lessonViewTeachers{
-  flex: 1 1;
-  display: table-cell;
-}
-
-.lessonViewText {
-  font-size: 150%;
-  text-align: right;
-  direction: rtl;
-  padding: 6%;
+.lessonView * * * {
+    font-size: x-large;
+    text-align: center;
+    font-style: italic;
+    margin: auto;
+    white-space: pre;
+    vertical-align: middle;
 }
 
 .hiddenView {
-  visibility: hidden;
-  display: none;
-  height: 0;
+    visibility: hidden;
+    display: none;
+    height: 0;
 }
 
 .topBarIcon {
-  height: inherit;
-  vertical-align: middle;
-  width: 8vh;
+    height: inherit;
+    vertical-align: middle;
+    width: 8vh;
 }
 
 .classroomSchedule {
 }
 
 .switcherButton {
-  background-color: #333;
-  color: #FFF;
-  font-size: 150%;
-  text-align: center;
-  border-radius: 1vh;
-  padding: 4%;
+
 }
 
 .button {
-  background-color: #333;
-  color: white;
-  font-size: 150%;
-  display: table-cell;
-  min-height: 8vh;
-  height: 8vh;
-  padding: 1%;
-  width: 30vw;
+    background-color: #333;
+    color: white;
+    font-size: 150%;
+    display: table-cell;
+    min-height: 8vh;
+    height: 8vh;
+    padding: 1%;
+    width: 30vw;
+}
+
+#messageView {
+    background-color: #333;
+    border-radius: 10px;
+    width: inherit;
+}
+
+#messageView * {
+    padding: 4%;
+}
+
+#switcher {
+    padding-bottom: 1vh;
+}
+
+#switcher * {
+    width: 100%;
+    align-items: center;
+}
+
+#switcher * * {
+    display: inline-grid;
+    background-color: #6789ab;
+    color: #FFF;
+    font-size: 150%;
+    text-align: center;
+    border-radius: 1vh;
+    height: 8vh;
+    width: 16vw;
+    margin: 1%;
 }
 
 #schedule {
@@ -105,112 +92,107 @@
 }
 
 #aboutView {
-  margin: 2vh;
-  padding: 4vh;
+    margin: 2vh;
+    padding: 4vh;
 }
 
 #top {
-  vertical-align: top;
-  border-radius: 10px;
-  height: auto;
-  width: 96vw;
-  position: fixed;
-  top: 2vw;
+    vertical-align: top;
+    border-radius: 10px;
+    height: auto;
+    width: auto;
+    position: static;
+    top: 1vw;
 }
 
 #bottom {
-  position: absolute;
-  vertical-align: bottom;
-  height: auto;
-  width: auto;
-}
-
-#classroomSwitcher {
-  padding: 2vh;
+    position: absolute;
+    vertical-align: bottom;
+    height: auto;
+    width: auto;
 }
 
 #menuIcons {
-  height: inherit;
-  padding: 1vh;
+    height: inherit;
+    padding: 1vh;
 }
 
 #corner {
-  height: 14vh;
-  width: 14vh;
-  border-radius: 14vh 0 0 0;
-  -moz-border-radius: 14vh 0 0 0;
-  -webkit-border-radius: 14vh 0 0 0;
-  position: fixed;
-  bottom: 0;
-  right: 0;
+    height: 14vh;
+    width: 14vh;
+    border-radius: 14vh 0 0 0;
+    -moz-border-radius: 14vh 0 0 0;
+    -webkit-border-radius: 14vh 0 0 0;
+    position: fixed;
+    bottom: 0;
+    right: 0;
 
 }
 
 #cornerContent {
-  height: 11vh;
-  width: 11vh;
-  position: fixed;
-  bottom: 0;
-  right: 0;
+    height: 11vh;
+    width: 11vh;
+    position: fixed;
+    bottom: 0;
+    right: 0;
 }
 
 #cornerTop {
-  font-size: 160%;
-  text-align: center;
-  vertical-align: middle;
+    font-size: 160%;
+    text-align: center;
+    vertical-align: middle;
 }
 
 #cornerBottom {
-  font-size: 120%;
-  text-align: center;
-  vertical-align: middle;
+    font-size: 120%;
+    text-align: center;
+    vertical-align: middle;
 }
 
 #popupInstall {
-  background-color: #888888a0;
-  border-radius: 10px;
-  min-height: 14vh;
-  padding: 1vh;
-  margin: 1vh 0 0 0;
-  width: inherit;
+    background-color: #888888a0;
+    border-radius: 10px;
+    min-height: 14vh;
+    padding: 1vh;
+    margin: 1vh 0 0 0;
+    width: inherit;
 }
 
 #installText {
-  font-size: 175%;
+    font-size: 175%;
 }
 
 #installYeah {
-  background-color: #00AA0080;
-  border-radius: 10px 0 0 10px;
+    background-color: #00AA0080;
+    border-radius: 10px 0 0 10px;
 }
 
 #installNah {
-  background-color: #AA000080;
-  border-radius: 0 10px 10px 0;
+    background-color: #AA000080;
+    border-radius: 0 10px 10px 0;
 }
 
 html {
-  height: auto;
-  width: 100%;
-  overflow-x: hidden;
+    height: auto;
+    width: 100%;
+    overflow-x: hidden;
 }
 
 body {
-  background-repeat: no-repeat;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-  min-height: 100vh;
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    min-height: 100vh;
 }
 
 p,
 a,
 i {
-  font-family: Arial, ArialHebrew, sans-serif;
-  color: #FFF;
-  vertical-align: middle;
-  text-align: center;
-  font-size: larger;
-  margin: 1vh;
+    font-family: Arial, ArialHebrew, sans-serif;
+    color: #FFF;
+    vertical-align: middle;
+    text-align: center;
+    margin: 1vh;
 }
