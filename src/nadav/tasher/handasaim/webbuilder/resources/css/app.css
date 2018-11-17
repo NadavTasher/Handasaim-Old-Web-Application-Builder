@@ -48,10 +48,6 @@
     padding: 2vh;
 }
 
-#switcher {
-    padding-bottom: 1vh;
-}
-
 #switcher * {
     width: 100%;
     align-items: center;
@@ -85,6 +81,11 @@
     width: auto;
     position: static;
     top: 1vw;
+    padding-top: 1vh;
+}
+
+#topContent {
+    padding-bottom: 1vh;
 }
 
 #bottom {
