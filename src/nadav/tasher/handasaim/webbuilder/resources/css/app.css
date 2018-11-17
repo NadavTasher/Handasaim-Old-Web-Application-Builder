@@ -33,27 +33,8 @@
 }
 
 .topBarIcon {
-    height: inherit;
     vertical-align: middle;
-    width: 8vh;
-}
-
-.classroomSchedule {
-}
-
-.switcherButton {
-
-}
-
-.button {
-    background-color: #333;
-    color: white;
-    font-size: 150%;
-    display: table-cell;
-    min-height: 8vh;
-    height: 8vh;
-    padding: 1%;
-    width: 30vw;
+    height: 7vh;
 }
 
 #messageView {
@@ -63,7 +44,8 @@
 }
 
 #messageView * {
-    padding: 4%;
+    font-size: x-large;
+    padding: 2vh;
 }
 
 #switcher {
@@ -130,21 +112,23 @@
 }
 
 #cornerContent {
+    display: grid;
     height: 11vh;
     width: 11vh;
     position: fixed;
     bottom: 0;
     right: 0;
+    padding: 1vh 0;
 }
 
 #cornerTop {
-    font-size: 160%;
+    font-size: x-large;
     text-align: center;
     vertical-align: middle;
 }
 
 #cornerBottom {
-    font-size: 120%;
+    font-size: large;
     text-align: center;
     vertical-align: middle;
 }
@@ -164,12 +148,14 @@
 
 #installYeah {
     background-color: #00AA0080;
-    border-radius: 10px 0 0 10px;
+    padding: 1.5vh;
+    border-radius: 10px;
 }
 
 #installNah {
     background-color: #AA000080;
-    border-radius: 0 10px 10px 0;
+    padding: 1.5vh;
+    border-radius: 10px;
 }
 
 html {
