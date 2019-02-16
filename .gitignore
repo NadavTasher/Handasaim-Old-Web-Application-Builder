@@ -1,0 +1,6 @@
+# Created by .ignore support plugin (hsz.mobi)
+.idea/workspace.xml
+libraries/commons-text-1.4.jar
+out/
+schedule.xls
+schedule.xlsx
