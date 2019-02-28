@@ -37,6 +37,7 @@ form {
     justify-content: space-between;
     align-self: stretch;
     align-items: center;
+    min-height: fit-content;
 }
 
 p,
@@ -51,7 +52,7 @@ table {
     font-size: x-large;
     text-align-last: center;
     text-align: center;
-    color: #000;
+    color: #FFF;
     margin: 1vh;
     padding: 1vh;
 }
@@ -72,4 +73,20 @@ select:hover,
 option:hover,
 button:hover {
     background-color: #111;
+}
+
+#dashboard {
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+#dashboard > div {
+
+}
+
+#message, #date-time {
+    background-color: #333;
+    border-radius: 10px;
+    margin: 1vh;
+    padding: 1.5vh;
 }

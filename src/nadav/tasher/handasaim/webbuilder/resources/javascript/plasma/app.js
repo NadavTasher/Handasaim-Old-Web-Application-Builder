@@ -14,30 +14,6 @@ let schedule;
 
 function load() {
     setup();
-    setupInstallPopup();
-}
-
-function setupInstallPopup() {
-    hide("installPopup");
-
-    function showInstallPopup() {
-        if (getCookie(installCookie) !== "true" && findGetParameter("install") !== "false") {
-            show("installPopup");
-        }
-    }
-
-    showInstallPopup();
-
-}
-
-function dismissInstallPopup() {
-    setCookie(installCookie, "true");
-    hide("installPopup");
-}
-
-function installApplication() {
-    dismissInstallPopup();
-    document.location.href = "files/handasaim.mobileconfig";
 }
 
 function setClassroom(classroomName) {
@@ -101,37 +77,19 @@ function setup() {
         document.body.style.backgroundColor = topColor;
     }
 
-    function setupCorner() {
-        get("corner").style.backgroundColor = bottomColor + "80";
-        get("cornerContent").style.height = (Math.sqrt(2) / 2) * get("corner").offsetHeight + "px";
-        get("cornerContent").style.width = (Math.sqrt(2) / 2) * get("corner").offsetWidth + "px";
-    }
-
     function setupTheme() {
         theme(topColor);
     }
 
-    function setupTop() {
-        get("top").style.backgroundColor = topBarColor + "80";
-        hide("about");
-        hide("switcher");
+    function setupDashboard() {
+
     }
 
-    setupTop();
     setupTheme();
-    setupCorner();
     setupBackground();
-    hide("top");
+    setupDashboard();
     scheduleInterval = window.setInterval(updateSchedule, 1000 * 60 * 5);
     updateSchedule();
-}
-
-function toggleTop() {
-    if (!visible("top")) {
-        show("top");
-    } else {
-        hide("top");
-    }
 }
 
 function updateSchedule() {
@@ -161,29 +119,8 @@ function updateSchedule() {
         }
     }
 
-    function setupSwitcher() {
-        for (let c = 0; c < schedule.classrooms.length; c++) {
-            const grade = schedule.classrooms[c].grade;
-            const element = document.createElement("div");
-            element.classList.add("switcherButton");
-            element.onclick = function () {
-                setClassroom(schedule.classrooms[c].name);
-                hide("switcher");
-                hide("top");
-            };
-            element.innerHTML = schedule.classrooms[c].name;
-            get(grade + "th").appendChild(element);
-        }
-    }
-
     loadSchedule((s) => {
         schedule = s;
         setupMessages();
-        setupSwitcher();
-        setClassroom((getCookie(classCookie) !== "" && getCookie(classCookie) !== "undefined") ? getCookie(classCookie) : schedule.classrooms[0].name);
     });
-}
-
-function refresh() {
-    document.location.reload(true);
 }
