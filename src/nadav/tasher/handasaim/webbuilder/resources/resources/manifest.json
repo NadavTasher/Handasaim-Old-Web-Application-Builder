@@ -1,0 +1,22 @@
+{
+  "name": "H+",
+  "short_name": "H+",
+  "description": "Handasaim+ Web App",
+  "start_url": "../index.html",
+  "background_color": "#FFFFFF",
+  "theme_color": "#FFFFFF",
+  "display": "standalone",
+  "orientation": "natural",
+  "icons": [
+    {
+      "src": "../images/icon.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "../images/icon.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}

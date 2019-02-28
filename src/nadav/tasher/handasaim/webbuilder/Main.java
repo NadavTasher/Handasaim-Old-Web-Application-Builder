@@ -29,6 +29,7 @@ public class Main {
             if (outputFolder.exists()) {
                 if (outputFolder.isDirectory()) {
                     try {
+                        emptyDirectory(outputFolder);
                         copyResources(outputFolder);
                         result.put("success_resources", true);
                         try {
@@ -54,6 +55,23 @@ public class Main {
         }
         result.put("enough_args", args.length > 0);
         System.out.println(result.toString());
+    }
+
+    private static void emptyDirectory(File directory) {
+        File[] list = directory.listFiles();
+        if (list != null) {
+            for (File f : list) delete(f);
+        }
+    }
+
+    private static void delete(File f) {
+        if (f.isDirectory()) {
+            File[] list = f.listFiles();
+            if (list != null) {
+                for (File f1 : list) delete(f1);
+            }
+        }
+        f.delete();
     }
 
     private static void write(File file, String contents) throws IOException {

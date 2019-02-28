@@ -1,76 +1,31 @@
 <!DOCTYPE html>
+<!--
+Created By NadavTasher
+https://github.com/NadavTasher/WebAppBase/
+-->
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8"/>
+    <meta name="description" content="Handasaim+ Web App">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, minimal-ui"/>
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#FFFFFF"/>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-    <meta name="apple-mobile-web-app-title" content="H+">
-    <link rel="apple-touch-icon" href="icons/icon_apple.png"/>
-    <link rel="icon" href="icons/icon.png"/>
-    <link rel="stylesheet" href="css/app.css">
-    <script type="text/javascript" src="javascript/schedule.js"></script>
-    <script type="text/javascript" src="javascript/app/utils.js"></script>
-    <script type="text/javascript" src="javascript/app/core.js"></script>
-    <script type="text/javascript" src="javascript/plasma/gui.js"></script>
+    <meta name="apple-mobile-web-app-title" content="H+"/>
+    <link rel="apple-touch-icon" href="images/icon_apple.png"/>
+    <link rel="icon" href="images/icon.png"/>
+    <link rel="manifest" href="resources/manifest.json"/>
+    <link rel="stylesheet" href="css/plasma/plasma.css"/>
     <script type="text/javascript" src="javascript/plasma/app.js"></script>
+    <script type="text/javascript" src="javascript/app-utils.js"></script>
+    <script type="text/javascript" src="javascript/utils.js"></script>
     <title>H+</title>
+    <noscript></noscript>
 </head>
-
-<body onload="onPageLoad()">
-<center>
-    <div id="top">
-        <div id="menuIcons">
-            <img src="icons/class.svg" class="topBarIcon" onclick="toggleSwitcher()"/>
-            <img src="icons/icon.svg" class="topBarIcon" onclick="toggleAbout()"/>
-            <img src="icons/refresh.svg" class="topBarIcon" onclick="refresh()"/>
-        </div>
-        <div id="topContent">
-            <div id="about" class="hiddenView">
-                <p>
-                    <b>Handasaim+ Web</b><br/>
-                    <i>Made by Nadav Tasher</i><br/>
-                    <i>Version 0.6</i><br/>
-                    <a id="installApp" href="files/handasaim.mobileconfig">Install App</a>
-                </p>
-            </div>
-            <div id="switcher" class="hiddenView">
-                <div id="9th">
-                </div>
-                <div id="10th">
-                </div>
-                <div id="11th">
-                </div>
-                <div id="12th">
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="content">
-        <div id="junk">
-            <div id="popupInstall" class="hiddenView">
-                <p id="installText">
-                    <b>Install On Your iPhone®</b>
-                </p>
-                <p id="installYeah" onclick="installApp()">Install</p>
-                <p id="installNah" onclick="doneInstall()">I'll Skip.</p>
-            </div>
-        </div>
-        <div id="messageView">
-            <p id="message"></p>
-        </div>
-        <div id="schedule"></div>
-    </div>
-    <div id="bottom">
-        <div id="corner" onclick="toggleTop()">
-            <div id="cornerContent">
-                <p id="cornerTop"></p>
-                <p id="cornerBottom"></p>
-            </div>
-        </div>
-    </div>
-</center>
+<body onload="worker();load();">
+<div>
+    <!--Your App Body-->
+</div>
 </body>
-
 </html>

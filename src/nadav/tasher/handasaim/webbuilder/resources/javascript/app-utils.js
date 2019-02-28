@@ -1,29 +1,11 @@
-const
-    block = "block",
-    flex = "flex";
-
-function hideAll(view) {
-    let children = view.childNodes;
-    for (let i = 0; i < children.length; i++) {
-        if (children[i] !== undefined && children[i].style !== undefined)
-            hide(children[i]);
-    }
-}
-
-function hide(view) {
-    view.style.visibility = "hidden";
-    view.style.display = "none";
-    view.style.height = "0";
-}
-
-function showByDisplay(view, display) {
-    view.style.visibility = "visible";
-    view.style.display = display;
-    view.style.height = "auto";
-}
-
-function show(view) {
-    showByDisplay(view, block);
+function loadSchedule(callback) {
+    fetch("files/schedule.json", {
+        method: "get"
+    }).then(response => {
+        response.text().then((result) => {
+            callback(JSON.parse(result));
+        });
+    });
 }
 
 function minuteToTime(minute) {
@@ -34,16 +16,6 @@ function minuteToTime(minute) {
     time += (minutes < 10) ? "0" : "";
     time += minutes;
     return time;
-}
-
-function clear(view) {
-    while (view.firstChild) {
-        view.removeChild(view.firstChild);
-    }
-}
-
-function isHidden(view) {
-    return view.style.visibility === "hidden" || view.style.visibility === "";
 }
 
 function setCookie(cname, cvalue) {

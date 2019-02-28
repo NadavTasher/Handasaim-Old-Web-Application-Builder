@@ -1,0 +1,194 @@
+html {
+    overflow-x: hidden;
+    height: 100%;
+}
+
+body {
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-color: #FFFFFF;
+}
+
+body > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 96vw;
+}
+
+html,
+body {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+div,
+form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-self: stretch;
+    align-items: center;
+    min-height: fit-content;
+}
+
+p,
+input,
+select,
+option,
+button,
+table {
+    -webkit-appearance: none;
+    align-self: stretch;
+    font-family: Arial, ArialHebrew, sans-serif;
+    font-size: x-large;
+    text-align-last: center;
+    text-align: center;
+    color: #FFF;
+    margin: 1vh;
+    padding: 1vh;
+}
+
+input,
+select,
+option,
+button {
+    transition-duration: 0.4s;
+    background-color: #333;
+    border-radius: 1vh;
+    border-color: transparent;
+    color: #FFF;
+}
+
+input:hover,
+select:hover,
+option:hover,
+button:hover {
+    background-color: #111;
+}
+
+#icons {
+    height: inherit;
+    padding: 1vh;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#icons > img {
+    vertical-align: middle;
+    height: 7vh;
+}
+
+#switcher * {
+    flex-direction: row;
+    justify-content: center;
+}
+
+#switcher * * {
+    display: inline-grid;
+    background-color: #6789ab;
+    color: #FFF;
+    font-size: 150%;
+    text-align: center;
+    border-radius: 1vh;
+    height: 8vh;
+    width: 16vw;
+    margin: 1vh;
+}
+
+#schedule > div, #message, #top, #installPopup {
+    background-color: #333;
+    border-radius: 10px;
+    margin: 1vh;
+    padding: 1.5vh;
+    transition: width 600ms ease-out, height 600ms ease-out;
+}
+
+#schedule > div > p {
+    text-align: right;
+    text-align-last: right;
+    direction: rtl;
+}
+
+#schedule > div > div {
+    direction: rtl;
+    flex-direction: row;
+}
+
+#schedule > div > div > * {
+    font-size: x-large;
+    margin: auto;
+    padding: 0;
+}
+
+#schedule > div > * > * > * {
+    font-size: x-large;
+    text-align: center;
+    font-style: italic;
+    margin: auto;
+    white-space: pre;
+    vertical-align: middle;
+}
+
+#top {
+    vertical-align: top;
+    border-radius: 10px;
+    position: static;
+    margin-top: 1vh;
+    padding: 2vh;
+}
+
+#corner {
+    height: 14vh;
+    width: 14vh;
+    border-radius: 14vh 0 0 0;
+    -moz-border-radius: 14vh 0 0 0;
+    -webkit-border-radius: 14vh 0 0 0;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+
+}
+
+#cornerContent {
+    justify-content: space-evenly;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+}
+
+#cornerContent > p {
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    vertical-align: middle;
+}
+
+#cornerTop {
+    font-size: x-large;
+}
+
+#cornerBottom {
+    font-size: large;
+}
+
+#installPopup > p {
+    padding: 1.5vh;
+    border-radius: 10px;
+}
+
+#installYeah {
+    background-color: #00AA0080;
+}
+
+#installNah {
+    background-color: #AA000080;
+}
