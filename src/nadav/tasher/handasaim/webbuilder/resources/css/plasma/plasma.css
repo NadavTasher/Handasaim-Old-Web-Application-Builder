@@ -121,21 +121,17 @@ html {
     /*overflow: scroll;*/
 }
 
-#scroll::-webkit-scrollbar {
-    width: 0 !important
-}
-
-#scroll {
+#subjects {
+    flex-direction: row;
+    justify-content: stretch;
     overflow-y: -moz-scrollbars-none;
     overflow-y: auto;
     min-height: 70vh;
     height: 70vh;
-
 }
 
-#subjects {
-    flex-direction: row;
-    justify-content: stretch;
+#subjects::-webkit-scrollbar {
+    width: 0 !important
 }
 
 #subjects > div {

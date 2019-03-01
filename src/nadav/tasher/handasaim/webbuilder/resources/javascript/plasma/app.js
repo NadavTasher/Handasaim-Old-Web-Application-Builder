@@ -2,7 +2,9 @@ const
     topColor = "#00827E",
     bottomColor = "#00649C";
 
-let messageInterval, scheduleInterval;
+let messageInterval, scheduleInterval, scrollInterval;
+let scrollDirection = true;
+let previousScroll = undefined, scrollPaused = false;
 let messageIndex = 0;
 
 let schedule;
@@ -126,9 +128,38 @@ function updateSchedule() {
         }
     }
 
+    function setupAutoscroll() {
+        function scroll() {
+            function holdScroll() {
+                function releaseScroll() {
+                    scrollPaused = false;
+                    scrollDirection = !scrollDirection;
+                }
+
+                scrollPaused = true;
+                setTimeout(releaseScroll, 2000);
+            }
+
+            if (!scrollPaused) {
+                previousScroll = get("subjects").scrollTop;
+                if (scrollDirection)
+                    get("subjects").scrollBy(0, 1);
+                else
+                    get("subjects").scrollBy(0, -10);
+                if (get("subjects").scrollTop === previousScroll) {
+                    holdScroll();
+                }
+            }
+        }
+
+        window.clearInterval(scrollInterval);
+        scrollInterval = window.setInterval(scroll, 20);
+    }
+
     loadSchedule((s) => {
         schedule = s;
         setupMessages();
         setupClassrooms();
+        setupAutoscroll();
     });
 }
