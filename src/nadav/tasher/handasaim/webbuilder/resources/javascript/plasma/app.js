@@ -1,9 +1,4 @@
 const
-    classCookie = "class",
-    installCookie = "popupInstall";
-
-const
-    topBarColor = "#000000",
     topColor = "#00827E",
     bottomColor = "#00649C";
 
@@ -16,58 +11,63 @@ function load() {
     setup();
 }
 
-function setClassroom(classroomName) {
+function setupClassrooms() {
 
-    function addSubject(subject) {
+    function addSubject(column, subject) {
         if (subject.name.length > 0) {
             let subjectView = document.createElement("div");
-            let top = document.createElement("p");
-            let bottom = document.createElement("div");
-            let time = document.createElement("p");
-            let teachers = document.createElement("div");
+            let name = document.createElement("p");
+            // let teachers = document.createElement("p");
+            //
+            // for (let t = 0; t < subject.teachers.length; t++) {
+            //     teachers.innerHTML += subject.teachers[t];
+            // }
 
-            for (let t = 0; t < subject.teachers.length; t++) {
-                let teacher = document.createElement("p");
-                teacher.innerHTML = subject.teachers[t];
-                teachers.appendChild(teacher);
-            }
-
-            top.innerHTML = "\u200F" + subject.hour + ". " + subject.name;
-            time.innerHTML = minuteToTime(subject.start_minute) + " - " + minuteToTime(subject.end_minute);
-            hide(bottom);
-            subjectView.onclick = function () {
-                if (!visible(bottom)) {
-                    show(bottom);
-                } else {
-                    hide(bottom);
-                }
-            };
-            bottom.appendChild(teachers);
-            bottom.appendChild(time);
-            subjectView.appendChild(top);
-            subjectView.appendChild(bottom);
-            get("schedule").appendChild(subjectView);
+            name.innerText = subject.name;
+            subjectView.appendChild(name);
+            // subjectView.appendChild(teachers);
+            column.appendChild(subjectView);
         }
     }
 
-    function setCorner(topText, bottomText) {
-        get("cornerTop").innerText = topText;
-        get("cornerBottom").innerText = bottomText;
-    }
-
-    setCookie(classCookie, classroomName);
-    // Corner
-    setCorner(classroomName, schedule.day);
-    // Parse Object
-    clear("schedule");
-    for (let classroomIndex = 0; classroomIndex < schedule.classrooms.length; classroomIndex++) {
-        if (schedule.classrooms[classroomIndex].name === classroomName) {
+    function dayLength() {
+        let maxLength = 0;
+        for (let classroomIndex = 0; classroomIndex < schedule.classrooms.length; classroomIndex++) {
             let classroom = schedule.classrooms[classroomIndex];
-            for (let subjectIndex = 0; subjectIndex < classroom.subjects.length; subjectIndex++) {
-                let subject = classroom.subjects[subjectIndex];
-                addSubject(subject);
-            }
+            if (classroom.subjects.length > maxLength) maxLength = classroom.subjects.length;
         }
+        return maxLength;
+    }
+
+    function setupTimes() {
+        get("classname").appendChild(document.createElement("div"));
+        let column = document.createElement("div");
+        for (let h = 0; h < dayLength(); h++) {
+            let timeHolder = document.createElement("div");
+            let time = document.createElement("p");
+            time.innerText = h;
+            timeHolder.appendChild(time);
+            column.appendChild(timeHolder);
+        }
+        get("subjects").appendChild(column);
+    }
+
+    clear("subjects");
+    clear("classname");
+    setupTimes();
+    for (let classroomIndex = 0; classroomIndex < schedule.classrooms.length; classroomIndex++) {
+        let classroom = schedule.classrooms[classroomIndex];
+        let column = document.createElement("div");
+        let nameHolder = document.createElement("div");
+        let nameTitle = document.createElement("p");
+        nameHolder.appendChild(nameTitle);
+        nameTitle.innerText = classroom.name;
+        get("classname").appendChild(nameHolder);
+        for (let subjectIndex = 0; subjectIndex < classroom.subjects.length; subjectIndex++) {
+            let subject = classroom.subjects[subjectIndex];
+            addSubject(column, subject);
+        }
+        get("subjects").appendChild(column);
     }
 }
 
@@ -82,7 +82,14 @@ function setup() {
     }
 
     function setupDashboard() {
+        function updateDateTime() {
+            let now = new Date();
+            get("time").innerText = now.getHours() + ":" + ((now.getMinutes() < 10) ? "0" + now.getMinutes() : now.getMinutes());
+            get("date").innerText = now.getDate() + "." + (now.getMonth() + 1) + "." + now.getFullYear();
+        }
 
+        window.setInterval(updateDateTime, 500);
+        updateDateTime();
     }
 
     setupTheme();
@@ -122,5 +129,6 @@ function updateSchedule() {
     loadSchedule((s) => {
         schedule = s;
         setupMessages();
+        setupClassrooms();
     });
 }
