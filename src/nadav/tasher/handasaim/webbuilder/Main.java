@@ -65,7 +65,7 @@ public class Main {
     }
 
     private static void delete(File f) {
-        if (!f.getName().startsWith(",")) {
+        if (!f.getName().startsWith(".")) {
             if (f.isDirectory()) {
                 File[] list = f.listFiles();
                 if (list != null) {
