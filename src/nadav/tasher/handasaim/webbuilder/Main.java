@@ -65,13 +65,15 @@ public class Main {
     }
 
     private static void delete(File f) {
-        if (f.isDirectory()) {
-            File[] list = f.listFiles();
-            if (list != null) {
-                for (File f1 : list) delete(f1);
+        if (!f.getName().startsWith(",")) {
+            if (f.isDirectory()) {
+                File[] list = f.listFiles();
+                if (list != null) {
+                    for (File f1 : list) delete(f1);
+                }
             }
+            f.delete();
         }
-        f.delete();
     }
 
     private static void write(File file, String contents) throws IOException {
