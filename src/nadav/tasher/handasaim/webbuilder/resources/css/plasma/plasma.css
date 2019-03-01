@@ -20,7 +20,6 @@ body > div {
     position: absolute;
     top: 0;
     bottom: 0;
-    /*width: 96vw;*/
     width: 100%;
 }
 
@@ -80,11 +79,6 @@ html {
     overflow-y: hidden;
 }
 
-#schedule {
-    height: 80vh;
-    direction: rtl;
-}
-
 #dashboard {
     height: 15vh;
     flex-direction: row;
@@ -120,10 +114,28 @@ html {
     flex-direction: row;
 }
 
+#schedule {
+    height: 80vh;
+    direction: rtl;
+    align-content: stretch;
+    /*overflow: scroll;*/
+}
+
+#scroll::-webkit-scrollbar {
+    width: 0 !important
+}
+
+#scroll {
+    overflow-y: -moz-scrollbars-none;
+    overflow-y: auto;
+    min-height: 70vh;
+    height: 70vh;
+
+}
+
 #subjects {
     flex-direction: row;
     justify-content: stretch;
-    max-height: 70vh;
 }
 
 #subjects > div {
@@ -132,15 +144,16 @@ html {
     margin: 0 0.4vw;
 }
 
-#subjects p {
-    margin: 0;
-    padding: 0.3vw;
-    font-size: large;
-    word-break: break-all;
-}
-
 #subjects > div > div {
     margin: 0.4vw 0;
-    overflow: hidden;
     height: 15vh;
+}
+
+#subjects > div > div > p {
+    margin: 0;
+    max-height: 14vh;
+    padding: 0.3vh;
+    font-size: large;
+    word-break: break-all;
+    text-overflow: clip;
 }
