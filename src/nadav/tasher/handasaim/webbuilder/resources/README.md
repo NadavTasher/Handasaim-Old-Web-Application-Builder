@@ -4,18 +4,33 @@ This directory, `resources`, is the official repository for the Handasaim+ Web A
 ### Instructions for installing on a plasma
 You will need to trigger the following command once, every login.
 ```
-chromium --start-fullscreen https://hwbb.github.io/h/plasma.html
+chromium --incognito --password-store=basic --start-fullscreen https://hwbb.github.io/h/plasma.html
 ```
 #### Adding the command to startup script
 ```
-sudo nano .bashrc
+mkdir ~/.config/autostart
+echo [Desktop\ Entry] > ~/.config/autostart/Handasaim.desktop
+echo Type=Application >> ~/.config/autostart/Handasaim.desktop
+echo Exec=chromium\ --incognito\ --password-store=basic\ --start-fullscreen\ https://hwbb.github.io/h/plasma.html >> ~/.config/autostart/Handasaim.desktop
+echo Hidden=false >> ~/.config/autostart/Handasaim.desktop
+echo NoDisplay=false >> ~/.config/autostart/Handasaim.desktop
+echo X-GNOME-Autostart-enabled=true >> ~/.config/autostart/Handasaim.desktop
+echo Name=Handasaim+ >> ~/.config/autostart/Handasaim.desktop
 ```
-Scroll to bottom and add
+File contents:
 ```
-chromium --start-fullscreen https://hwbb.github.io/h/plasma.html
+[Desktop Entry]
+Type=Application
+Exec=chromium --incognito\ --password-store=basic\ --start-fullscreen https://hwbb.github.io/h/plasma.html
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+Name=Handasaim+
 ```
-Press Ctrl+Shift+O then Ctrl+X
-
+#### Uninstalling
+```
+rm ~/.config/autostart/Handasaim.desktop
+```
 ### Intructions on creating a build script
 Use `git config credential.helper store` to store uname/pwd
 ```
