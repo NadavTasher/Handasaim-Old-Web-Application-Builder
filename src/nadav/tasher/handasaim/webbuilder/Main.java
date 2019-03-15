@@ -29,27 +29,26 @@ public class Main {
             if (outputFolder.exists()) {
                 if (outputFolder.isDirectory()) {
                     try {
-                        emptyDirectory(outputFolder);
-                        copyResources(outputFolder);
-                        result.put("success_resources", true);
-                        try {
-                            Schedule schedule = getSchedule(getScheduleLink());
-                            if (schedule != null) {
+                        Schedule schedule = getSchedule(getScheduleLink());
+                        result.put("success_schedule", false);
+                        if (schedule != null) {
+                            emptyDirectory(outputFolder);
+                            copyResources(outputFolder);
+                            result.put("success_resources", true);
+                            try {
                                 JSONObject injectableJSON = schedule.toJSON();
                                 write(new File(new File(outputFolder, "javascript"), "schedule.js"), ("var schedule = " + injectableJSON.toString() + ";"));
                                 write(new File(new File(outputFolder, "files"), "schedule.json"), (injectableJSON.toString()));
+                                result.put("success_schedule", true);
+                            } catch (IOException e) {
+                                e.printStackTrace();
                             }
-                            result.put("success_schedule", schedule != null);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            result.put("success_schedule", false);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
                         result.put("success_resources", false);
                     }
                 }
-                result.put("is_directory", outputFolder.isDirectory());
             }
             result.put("directory_exists", outputFolder.exists());
         }
@@ -84,29 +83,32 @@ public class Main {
     }
 
     private static Schedule getSchedule(String link) {
-        try {
-            URL website = new URL(link);
-            ReadableByteChannel rbc = Channels.newChannel(website.openStream());
-            FileOutputStream fos;
-            if (link.endsWith(".xlsx")) {
-                fos = new FileOutputStream(scheduleFileXLSX);
-            } else {
-                fos = new FileOutputStream(scheduleFileXLS);
+        if (link != null) {
+            try {
+                URL website = new URL(link);
+                ReadableByteChannel rbc = Channels.newChannel(website.openStream());
+                FileOutputStream fos;
+                if (link.endsWith(".xlsx")) {
+                    fos = new FileOutputStream(scheduleFileXLSX);
+                } else {
+                    fos = new FileOutputStream(scheduleFileXLS);
+                }
+                fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+                fos.close();
+                Schedule schedule;
+                if (link.endsWith(".xlsx")) {
+                    schedule = AppCore.getSchedule(scheduleFileXLSX, link);
+                } else {
+                    schedule = AppCore.getSchedule(scheduleFileXLS, link);
+                }
+                schedule = Schedule.Builder.fromSchedule(schedule).setName(scheduleName).build();
+                return schedule;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
             }
-            fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-            fos.close();
-            Schedule schedule;
-            if (link.endsWith(".xlsx")) {
-                schedule = AppCore.getSchedule(scheduleFileXLSX, link);
-            } else {
-                schedule = AppCore.getSchedule(scheduleFileXLS, link);
-            }
-            schedule = Schedule.Builder.fromSchedule(schedule).setName(scheduleName).build();
-            return schedule;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
         }
+        return null;
     }
 
     private static void copyResources(File output) throws Exception {
