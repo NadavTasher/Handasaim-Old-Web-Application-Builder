@@ -37,7 +37,6 @@ public class Main {
                             result.put("success_resources", true);
                             try {
                                 JSONObject injectableJSON = schedule.toJSON();
-                                write(new File(new File(outputFolder, "javascript"), "schedule.js"), ("var schedule = " + injectableJSON.toString() + ";"));
                                 write(new File(new File(outputFolder, "files"), "schedule.json"), (injectableJSON.toString()));
                                 result.put("success_schedule", true);
                             } catch (IOException e) {
